@@ -25,8 +25,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 import java.util.function.Function;
@@ -197,15 +197,13 @@ public abstract class CycleButtonMixin<T> extends AbstractButton implements Cycl
         return Config.CycleButton.PREVIOUS.getModifier() == Config.Modifier.SHIFT ? original : Config.CycleButton.PREVIOUS.matches(input);
     }
 
-    @ModifyArg(
+    @Inject(
             method = "mouseScrolled",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/components/CycleButton;cycleValue(I)V"
-            )
+            at = @At("HEAD"),
+            cancellable = true
     )
-    private int improvemymenus$scroll(int original) {
-        return Config.CycleButton.SCROLL ? original : 0;
+    private void improvemymenus$scroll(double x, double y, double scrollX, double scrollY, CallbackInfoReturnable<Boolean> cir) {
+        if (!Config.CycleButton.SCROLL) cir.setReturnValue(false);
     }
 
     @Override

@@ -1,15 +1,18 @@
 {
   "schemaVersion": 1,
-  "id": "improve-my-menus",
+  "id": "improvemymenus",
   "version": "${version}",
   "name": "ImproveMyMenus",
-  "description": "",
+  "description": "A collection of small improvements to various aspects of Minecraft's menus.",
   "authors": [
     "agent_LuluDodo"
   ],
-  "contact": {},
+  "contact": {
+    "sources": "https://github.com/agent-LuluDodo/ImproveMyMenus",
+    "issues": "https://github.com/agent-LuluDodo/ImproveMyMenus/issues"
+  },
   "license": "MIT",
-  "icon": "assets/improve-my-menus/icon.png",
+  "icon": "assets/improvemymenus/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
@@ -20,12 +23,12 @@
     ]
   },
   "mixins": [
-    "improve-my-menus.mixins.json"
+    "improvemymenus.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
     "minecraft": "${minecraft_version}"
   },
-  "accessWidener": "improve-my-menus.classtweaker"
+  "accessWidener": "improvemymenus.classtweaker"
 }

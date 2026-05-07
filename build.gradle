@@ -31,7 +31,7 @@ dependencies {
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/improve-my-menus.classtweaker")
+    accessWidenerPath = file("src/main/resources/improvemymenus.classtweaker")
 }
 
 processResources {
