@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "improvemymenus",
+  "version": "${version}",
+  "name": "ImproveMyMenus",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/improvemymenus/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "de.luludodo.improvemymenus.client.ImprovemymenusClient"
+    ],
+    "main": [
+      "de.luludodo.improvemymenus.Improvemymenus"
+    ]
+  },
+  "mixins": [
+    "improvemymenus.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
