@@ -14,7 +14,6 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -155,6 +154,8 @@ public class MinimalConfig {
         private void set(Object value) {
             OptionInstance<Object> objectInstance = uncheckedCast(instance);
             objectInstance.set(value);
+            if (!Minecraft.getInstance().isRunning())
+                objectInstance.onValueUpdate.accept(value);
         }
     }
 
@@ -268,7 +269,7 @@ public class MinimalConfig {
             return;
         }
 
-        setJson(json);
+        if (setJson(json)) save();
     }
 
     /// Saves this config, gets automatically called upon closing the config screen.
@@ -313,8 +314,9 @@ public class MinimalConfig {
         return GSON.toJson(result);
     }
 
-    private void setJson(String content) {
+    private boolean setJson(String content) {
         try {
+            boolean hasMissingConfigValue = false;
             JsonObject json = JsonParser.parseString(content).getAsJsonObject();
             for (Category category : categories) {
                 JsonElement categoryJsonElement = json.get(category.name);
@@ -326,27 +328,27 @@ public class MinimalConfig {
                 for (Option option : category.options) {
                     JsonElement optionJsonElement = categoryJson.get(option.name);
                     if (!(optionJsonElement instanceof JsonPrimitive optionJson)) {
-                        missingConfigValue(option);
+                        hasMissingConfigValue = missingConfigValue(option);
                         continue;
                     }
 
                     if (option.type == boolean.class) {
                         if (!optionJson.isBoolean()) {
-                            missingConfigValue(option);
+                            hasMissingConfigValue = missingConfigValue(option);
                             continue;
                         }
 
                         option.set(optionJson.getAsBoolean());
                     } else if (option.type == int.class) {
                         if (!optionJson.isNumber()) {
-                            missingConfigValue(option);
+                            hasMissingConfigValue = missingConfigValue(option);
                             continue;
                         }
 
                         option.set(optionJson.getAsInt());
                     } else if (option.type instanceof Class<?>) {
                         if (!optionJson.isString()) {
-                            missingConfigValue(option);
+                            hasMissingConfigValue = missingConfigValue(option);
                             continue;
                         }
 
@@ -356,15 +358,17 @@ public class MinimalConfig {
                                     optionJson.getAsString().toUpperCase(Locale.ROOT)
                             ));
                         } catch (IllegalArgumentException e) {
-                            missingConfigValue(option);
+                            hasMissingConfigValue = missingConfigValue(option);
                         }
                     } else {
                         throw new IllegalStateException("Unknown value type: " + option.type);
                     }
                 }
             }
+            return hasMissingConfigValue;
         } catch (RuntimeException e) {
             this.logger.error("Could not parse config", e);
+            return true;
         }
     }
 
@@ -373,8 +377,9 @@ public class MinimalConfig {
         return (T) obj;
     }
 
-    private void missingConfigValue(Option option) {
+    private boolean missingConfigValue(Option option) {
         this.logger.warn("Config is missing value for option '{}'", option.name);
+        return true;
     }
 
     /// Required for the class extending [MinimalConfig].

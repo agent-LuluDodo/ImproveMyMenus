@@ -3,8 +3,6 @@ package de.luludodo.improvemymenus.config;
 import de.luludodo.improvemymenus.util.CommonComponentsUtil;
 import de.luludodo.improvemymenus.util.Globals;
 import net.minecraft.client.input.InputWithModifiers;
-import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.network.chat.CommonComponents;
 
 import static de.luludodo.improvemymenus.config.MinimalConfig.Mod;
@@ -36,7 +34,8 @@ public class Config extends MinimalConfig {
     }
 
     public static class Slider {
-        public static boolean PREVIEW = true;
+        public static boolean SEPARATORS = true;
+        public static boolean HIGHLIGHT = false;
 
         public static SnapTiming SNAP = SnapTiming.ON_RELEASE;
         public enum SnapTiming {
@@ -52,8 +51,6 @@ public class Config extends MinimalConfig {
             VISUAL,
             AREA
         }
-
-        public static boolean SEPARATORS = true;
     }
 
     public static class List {
@@ -72,6 +69,8 @@ public class Config extends MinimalConfig {
             VIDEO_SETTINGS,
             EVERYWHERE
         }
+
+        public static boolean UNBLUR_VIDEO_SETTINGS = true;
         
         public static boolean MNEMONICS = true;
 
@@ -134,7 +133,6 @@ public class Config extends MinimalConfig {
 
     @SuppressWarnings("unused")
     public static void reloadCommonComponents() {
-        System.out.println("Reloading common components");
         CommonComponents.OPTION_ON = CommonComponentsUtil.getOn();
         CommonComponents.OPTION_OFF = CommonComponentsUtil.getOff();
         reloadMessages();

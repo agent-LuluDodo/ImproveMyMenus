@@ -1,8 +1,8 @@
 package de.luludodo.improvemymenus.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import de.luludodo.improvemymenus.mixinInterface.CycleButtonBuilderWithType;
 import de.luludodo.improvemymenus.mixinInterface.AbstractButtonWithType;
+import de.luludodo.improvemymenus.mixinInterface.CycleButtonBuilderWithType;
 import net.minecraft.client.gui.components.CycleButton;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

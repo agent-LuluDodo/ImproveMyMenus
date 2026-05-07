@@ -1,7 +1,7 @@
 package de.luludodo.improvemymenus.mixin;
 
 import de.luludodo.improvemymenus.mixinInterface.TextColorWithAlpha;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.TextColor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 

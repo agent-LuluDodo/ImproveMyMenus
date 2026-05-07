@@ -8,12 +8,17 @@
     "AbstractScrollAreaMixin",
     "AbstractSliderButtonMixin",
     "AbstractWidgetMixin",
+    "CommonComponentsMixin",
+    "ContainerEventHandlerMixin",
     "CycleButtonBuilderMixin",
     "CycleButtonMixin",
+    "OptionInstanceMixin",
     "OptionInstanceSliderButtonMixin",
+    "OptionsMixin",
     "PreparedTextBuilderMixin",
+    "ScreenMixin",
     "TextColorMixin",
-    "CommonComponentsMixin"
+    "VideoSettingsScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

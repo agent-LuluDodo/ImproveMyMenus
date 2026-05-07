@@ -1,9 +1,7 @@
 package de.luludodo.improvemymenus.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import de.luludodo.improvemymenus.config.Config;
 import de.luludodo.improvemymenus.util.CommonComponentsUtil;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.MutableComponent;
 import org.spongepowered.asm.mixin.Mixin;
