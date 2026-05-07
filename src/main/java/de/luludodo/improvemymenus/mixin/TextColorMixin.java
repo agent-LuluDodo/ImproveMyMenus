@@ -1,41 +1,22 @@
 package de.luludodo.improvemymenus.mixin;
 
-import de.luludodo.improvemymenus.mixinInterface.StyleWithOpacity;
+import de.luludodo.improvemymenus.mixinInterface.TextColorWithAlpha;
 import net.minecraft.network.chat.*;
-import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import java.util.Objects;
-import java.util.Optional;
-
-@Mixin(Style.class)
-public abstract class StyleMixin implements StyleWithOpacity {
-    @Shadow
-    private static <T> Style checkEmptyAfterChange(Style newStyle, @Nullable T previous, @Nullable T next) {
-        throw new UnsupportedOperationException("Implemented via mixin");
-    }
-
+@Mixin(TextColor.class)
+public abstract class TextColorMixin implements TextColorWithAlpha {
     @Unique
-    private float improvemymenus$opacity = 1f;
-
-    
+    private int improvemymenus$alpha = 0xFF;
 
     @Override
-    public Style improvemymenus$withOpacity(float opacity) {
-        this.improvemymenus$opacity = opacity;
-
-        return
-
-        return Objects.equals(this.improvemymenus$opacity, opacity)
-                ? this
-                : create()
-        )
+    public void improvemymenus$initAlpha(int alpha) {
+        this.improvemymenus$alpha = alpha;
     }
 
     @Override
-    public float improvemymenus$getOpacity() {
-        return improvemymenus$opacity;
+    public float improvemymenus$getAlpha() {
+        return this.improvemymenus$alpha;
     }
 }

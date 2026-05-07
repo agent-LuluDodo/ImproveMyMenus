@@ -1,28 +1,31 @@
 {
   "schemaVersion": 1,
-  "id": "improvemymenus",
+  "id": "improve-my-menus",
   "version": "${version}",
   "name": "ImproveMyMenus",
   "description": "",
-  "authors": [],
+  "authors": [
+    "agent_LuluDodo"
+  ],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/improvemymenus/icon.png",
+  "icon": "assets/improve-my-menus/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "de.luludodo.improvemymenus.client.ImprovemymenusClient"
+      "de.luludodo.improvemymenus.ImproveMyMenus"
     ],
-    "main": [
-      "de.luludodo.improvemymenus.Improvemymenus"
+    "modmenu": [
+      "de.luludodo.improvemymenus.modmenu.ImproveMyMenusModMenuIntegration"
     ]
   },
   "mixins": [
-    "improvemymenus.mixins.json"
+    "improve-my-menus.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
     "minecraft": "${minecraft_version}"
-  }
+  },
+  "accessWidener": "improve-my-menus.classtweaker"
 }

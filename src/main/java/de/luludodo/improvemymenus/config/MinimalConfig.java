@@ -1,8 +1,9 @@
 package de.luludodo.improvemymenus.config;
 
-import com.google.gson.JsonObject;
+import com.google.common.io.Files;
+import com.google.gson.*;
 import com.mojang.serialization.Codec;
-import de.luludodo.improvemymenus.util.IdentifierUtil;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
@@ -12,9 +13,16 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ExtraCodecs;
-import org.intellij.lang.annotations.Language;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -22,15 +30,97 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.ToIntFunction;
 
-// This uses a similar System to midnight config, just with a lot less features (and a lot more scuffed)
-public class LuluConfig {
-    public static class Screen extends OptionsSubScreen {
+/// # Info
+/// An extremely minimalist config
+///
+/// ## Features
+///
+/// This also means, that you don't get any customization.
+/// Your config should include several subclasses, the name of the subclass is the name of that category.
+/// Inside of these subclasses are the config values, represented by fields.
+/// This config supports `boolean`, `int` and `enum` values.
+///
+/// ### Loading/Saving
+///
+/// This is the only thing which is slightly more complex than it has to be.
+/// Before saving a backup of the config is created as to prevent any crashes during saving from breaking the config.
+/// Loading first checks if that backup is present and loads it with priority over the normal config file.
+///
+/// ## Annotations
+///
+/// Your config is required to extends this class and to be annotated with [Mod].
+/// `int` values are required to be annotated with [IntSlider].
+/// Every value can optionally be annotated with [OnChange].
+///
+/// # Usage
+///
+/// ## Class
+///
+/// ```java
+/// @Mod(name = "My Mod", id = "my-id")
+/// public class Config extends MinimalConfig {
+///     public static final Config INSTANCE = new Config();
+///
+///     public class MyCategory {
+///         public static boolean BOOLEAN_OPTION = true;
+///
+///         @OnChange("reloadEnum")
+///         public static MyEnum ENUM_OPTION = MyEnum.FOO;
+///         public enum MyEnum {
+///             FOO,
+///             BAR,
+///             FOO_BAR
+///         }
+///
+///         @IntSlider(min = 0, max = 100)
+///         public static int MY_INT = 10;
+///     }
+///
+///     public static void reloadEnum() {
+///         // do stuff
+///     }
+/// }
+/// ```
+///
+/// ## Translations
+///
+/// ```json
+/// {
+///   "my-id.options": "My Config",
+///   "my-id.options.my_category": "My Category",
+///   "my-id.options.my_category.boolean_option": "Boolean Option",
+///   "my-id.options.my_category.boolean_option.off": "Custom Off Translation",
+///   "my-id.options.my_category.enum_option": "Enum Option",
+///   "my-id.options.my_category.enum_option.tooltip": "This is a enum option",
+///   "my-id.options.my_category.enum_option.foo": "Foo",
+///   "my-id.options.my_category.enum_option.bar": "Bar",
+///   "my-id.options.my_category.enum_option.bar.tooltip": "This will override the enum_option tooltip",
+///   "my-id.options.my_category.enum_option.foo_bar": "Foo & Bar",
+///   "my-id.options.my_category.my_int": "My Int Slider"
+/// }
+/// ```
+///
+/// ## Config File
+///
+/// ```json
+/// {
+///   "my_category": {
+///     "boolean_option": true,
+///     "enum_option": "foo",
+///     "my_int": 10
+///   }
+/// }
+/// ```
+public class MinimalConfig {
+    private static class Screen extends OptionsSubScreen {
         private final Category[] categories;
         private final Runnable save;
         private Screen(net.minecraft.client.gui.screens.Screen parent, Category[] categories, String title, Runnable save) {
@@ -61,21 +151,38 @@ public class LuluConfig {
 
     private record Category(String name, Component header, Option[] options) {}
 
-    private record Option(String name, OptionInstance<?> instance) {}
+    private record Option(String name, Class<?> type, OptionInstance<?> instance) {
+        private void set(Object value) {
+            OptionInstance<Object> objectInstance = uncheckedCast(instance);
+            objectInstance.set(value);
+        }
+    }
 
     private final Category[] categories;
 
+    private  final Logger logger;
+    private final File old;
+    private final File file;
     private final String title;
 
-    public LuluConfig() {
-        Identifier id = getClass().getAnnotation(Identifier.class);
+    /// Creates a new instance of this config.
+    protected MinimalConfig() {
+        Mod id = getClass().getAnnotation(Mod.class);
         if (id == null)
-            throw new IllegalArgumentException("Missing @Identifier annotation for '" + getClass().getSimpleName() + "'");
+            throw new IllegalArgumentException("Missing @Identifier annotation for '" + getClass().getName() + "'");
 
-        this.title = id.value() + ".options";
+        String modId = id.id();
+        Path configDir = FabricLoader.getInstance().getConfigDir();
+        this.old = configDir.resolve(modId + ".json.old").toFile();
+        this.file = configDir.resolve(modId + ".json").toFile();
+
+        this.logger = LoggerFactory.getLogger(id.name() + "/MinimalConfig");
+        this.title = modId + ".options";
 
         List<Category> categories = new ArrayList<>();
         for (Class<?> subClass : getClass().getDeclaredClasses()) {
+            if (subClass.isEnum()) continue;
+
             String category = category(subClass);
             String categoryId = this.title + "." + category;
             List<Option> options = new ArrayList<>();
@@ -89,6 +196,7 @@ public class LuluConfig {
                     if (type == boolean.class) {
                         options.add(new Option(
                                 option,
+                                boolean.class,
                                 boolOption(
                                         optionId,
                                         field,
@@ -98,6 +206,7 @@ public class LuluConfig {
                     } else if (type == int.class) {
                         options.add(new Option(
                                 option,
+                                int.class,
                                 intOption(
                                         optionId,
                                         field,
@@ -107,7 +216,9 @@ public class LuluConfig {
                     } else if (type.isEnum()) {
                         options.add(new Option(
                                 option,
+                                type,
                                 enumOption(
+                                        type.getEnclosingClass() == subClass ? categoryId : title,
                                         optionId,
                                         field,
                                         type,
@@ -129,9 +240,62 @@ public class LuluConfig {
             ));
         }
         this.categories = categories.reversed().toArray(Category[]::new);
+
+        reload();
     }
 
+    /// Reloads this config, gets automatically called upon initializing.
+    public void reload() {
+        File load;
+        if (old.exists()) {
+            try {
+                Files.move(old, file);
+                load = file;
+            } catch (IOException _) {
+                load = old;
+            }
+        } else if (file.exists()) {
+            load = file;
+        } else {
+            return;
+        }
+
+        String json;
+        try (BufferedReader reader = Files.newReader(load, StandardCharsets.UTF_8)) {
+            json = reader.readAllAsString();
+        } catch (IOException e) {
+            this.logger.error("Could not load config", e);
+            return;
+        }
+
+        setJson(json);
+    }
+
+    /// Saves this config, gets automatically called upon closing the config screen.
     public void save() {
+        String json = getJson();
+
+        try {
+            if (!old.exists() && file.exists()) {
+                Files.copy(file, old);
+            }
+
+            try (BufferedWriter writer = Files.newWriter(file, StandardCharsets.UTF_8)) {
+                writer.write(json);
+            }
+
+            old.delete();
+        } catch (IOException e) {
+            this.logger.error("Could not save config", e);
+
+            try {
+                Files.move(old, file);
+            } catch (IOException _) {}
+        }
+    }
+
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private String getJson() {
         JsonObject result = new JsonObject();
         for (Category category : categories) {
             JsonObject categoryJson = new JsonObject();
@@ -146,30 +310,111 @@ public class LuluConfig {
             }
             result.add(category.name, categoryJson);
         }
-
-        System.out.println(result);
+        return GSON.toJson(result);
     }
 
+    private void setJson(String content) {
+        try {
+            JsonObject json = JsonParser.parseString(content).getAsJsonObject();
+            for (Category category : categories) {
+                JsonElement categoryJsonElement = json.get(category.name);
+                if (!(categoryJsonElement instanceof JsonObject categoryJson)) {
+                    this.logger.warn("Config is missing value for category '{}'", category.name);
+                    continue;
+                }
+
+                for (Option option : category.options) {
+                    JsonElement optionJsonElement = categoryJson.get(option.name);
+                    if (!(optionJsonElement instanceof JsonPrimitive optionJson)) {
+                        missingConfigValue(option);
+                        continue;
+                    }
+
+                    if (option.type == boolean.class) {
+                        if (!optionJson.isBoolean()) {
+                            missingConfigValue(option);
+                            continue;
+                        }
+
+                        option.set(optionJson.getAsBoolean());
+                    } else if (option.type == int.class) {
+                        if (!optionJson.isNumber()) {
+                            missingConfigValue(option);
+                            continue;
+                        }
+
+                        option.set(optionJson.getAsInt());
+                    } else if (option.type instanceof Class<?>) {
+                        if (!optionJson.isString()) {
+                            missingConfigValue(option);
+                            continue;
+                        }
+
+                        try {
+                            option.set(Enum.valueOf(
+                                    uncheckedCast(option.type),
+                                    optionJson.getAsString().toUpperCase(Locale.ROOT)
+                            ));
+                        } catch (IllegalArgumentException e) {
+                            missingConfigValue(option);
+                        }
+                    } else {
+                        throw new IllegalStateException("Unknown value type: " + option.type);
+                    }
+                }
+            }
+        } catch (RuntimeException e) {
+            this.logger.error("Could not parse config", e);
+        }
+    }
+
+    private static <T> T uncheckedCast(Object obj) {
+        //noinspection unchecked
+        return (T) obj;
+    }
+
+    private void missingConfigValue(Option option) {
+        this.logger.warn("Config is missing value for option '{}'", option.name);
+    }
+
+    /// Required for the class extending [MinimalConfig].
+    /// Specifies the identifier used to create translations and save the config.
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
-    public @interface Identifier {
-        String value();
+    public @interface Mod {
+        /// the mod name
+        String name();
+
+        // the mod id
+        String id();
     }
 
+    /// Required for a field of type `int`.
+    /// Provides information on the range of the slider.
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface IntSlider {
+        /// The smallest allowed value. (inclusive)
         int min();
+
+        /// The largest allowed value. (inclusive)
         int max();
     }
 
+    /// Calls the specified function when the value of this field changes.
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface OnChange {
+        /// The name of the function to call.
         String value();
     }
 
-    public Screen getScreen(net.minecraft.client.gui.screens.Screen parent) {
+    /// Creates an [OptionsSubScreen] for this config.
+    ///
+    /// @param parent The parent screen
+    ///
+    /// @return The newly instantiated {@link OptionsSubScreen}
+    public @NotNull OptionsSubScreen getScreen(net.minecraft.client.gui.screens.Screen parent) {
         return new Screen(parent, this.categories, this.title, this::save);
     }
 
@@ -197,14 +442,13 @@ public class LuluConfig {
         );
     }
 
-    private static <E extends Enum<E>> OptionInstance<?> enumOption(String option, Field field, Class<?> clazz, Class<?> parent) throws IllegalAccessException{
-        //noinspection unchecked
-        return new OptionInstance<>(
+    private static <E extends Enum<E>> OptionInstance<?> enumOption(String prefix, String option, Field field, Class<?> clazz, Class<?> parent) throws IllegalAccessException{
+        return new OptionInstance<E>(
                 option,
                 enumTooltipSupplier(option),
-                enumStringifier(option),
+                enumStringifier(prefix + "." + category(clazz)),
                 enumValues(clazz),
-                (E) field.get(null),
+                uncheckedCast(field.get(null)),
                 fieldSetter(option, field, parent)
         );
     }
@@ -247,7 +491,7 @@ public class LuluConfig {
     }
 
     private static <E extends Enum<E>> OptionInstance.Enum<E> enumValues(Class<?> clazz) {
-        @SuppressWarnings("unchecked") Class<E> enumClass = (Class<E>) clazz;
+        Class<E> enumClass = uncheckedCast(clazz);
         E[] constants = enumClass.getEnumConstants();
         List<E> values = Arrays.asList(constants);
         Codec<E> codec = ExtraCodecs.orCompressed(

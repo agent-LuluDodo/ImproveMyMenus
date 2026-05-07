@@ -1,22 +1,21 @@
 package de.luludodo.improvemymenus.mixin;
 
-import de.luludodo.improvemymenus.mixinInterface.StyleWithOpacity;
-import net.minecraft.network.chat.Style;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import de.luludodo.improvemymenus.mixinInterface.TextColorWithAlpha;
+import net.minecraft.network.chat.TextColor;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(Style.class)
-public abstract class StyleMixin implements StyleWithOpacity {
-    @Unique
-    private int improvemymenus$opacity = 0xFF;
-
-    @Override
-    public void improvemymenus$setOpacity(int opacity) {
-        this.improvemymenus$opacity = opacity;
-    }
-
-    @Override
-    public int improvemymenus$getOpacity() {
-        return improvemymenus$opacity;
+@Mixin(targets = "net.minecraft.client.gui.Font$PreparedTextBuilder")
+public abstract class PreparedTextBuilderMixin {
+    @ModifyExpressionValue(
+            method = "getTextColor",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/ARGB;alpha(I)I"
+            )
+    )
+    private int improvemymenus$applyAlpha(int original, TextColor textColor) {
+        return Math.clamp(Math.round((float) original * (TextColorWithAlpha.getAlpha(textColor) / 255f)), 0, 0xFF);
     }
 }

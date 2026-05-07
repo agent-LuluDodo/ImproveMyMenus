@@ -1,4 +1,62 @@
 package de.luludodo.improvemymenus.mixin;
 
-public class AbstractWidgetMixin {
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReceiver;
+import de.luludodo.improvemymenus.config.Config;
+import de.luludodo.improvemymenus.mixinInterface.AbstractWidgetWithTooltipGetter;
+import de.luludodo.improvemymenus.mixinInterface.CycleButtonWithIndicators;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetTooltipHolder;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.input.MouseButtonEvent;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+
+@Mixin(AbstractWidget.class)
+public abstract class AbstractWidgetMixin implements AbstractWidgetWithTooltipGetter {
+    @Shadow
+    @Final
+    private WidgetTooltipHolder tooltip;
+
+    @Override
+    public Tooltip improvemymenus$getTooltip() {
+        return this.tooltip.get();
+    }
+
+    @ModifyReceiver(
+            method = "extractRenderState",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/components/WidgetTooltipHolder;refreshTooltipForNextRenderPass(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIZZLnet/minecraft/client/gui/navigation/ScreenRectangle;)V"
+            )
+    )
+    private WidgetTooltipHolder improvemymenus$indicatorTooltip(WidgetTooltipHolder original, GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean isHovered, boolean isFocused, ScreenRectangle screenRectangle) {
+        if (this instanceof CycleButtonWithIndicators self && self.improvemymenus$isIndicatorHovered()) {
+            return self.improvemymenus$getIndicatorTooltip();
+        }
+        return original;
+    }
+
+    @ModifyExpressionValue(
+            method = "mouseClicked",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/components/AbstractWidget;isValidClickButton(Lnet/minecraft/client/input/MouseButtonInfo;)Z"
+            )
+    )
+    private boolean improvemymenus$isValidClickButton(boolean original, MouseButtonEvent event) {
+        if (this instanceof CycleButtonWithIndicators self) {
+            if ((!Config.CycleButton.INDICATORS || Config.CycleButton.INDICATOR == Config.ButtonBinding.LEFT) &&
+                    Config.CycleButton.NEXT == Config.ButtonBinding.LEFT &&
+                    Config.CycleButton.PREVIOUS == Config.ButtonBinding.SHIFT_LEFT)
+                return original;
+            return Config.CycleButton.NEXT.matches(event) || Config.CycleButton.PREVIOUS.matches(event) ||
+                    (Config.CycleButton.INDICATORS && self.improvemymenus$isIndicatorHovered() && Config.CycleButton.INDICATOR.matches(event));
+        }
+        return original;
+    }
 }

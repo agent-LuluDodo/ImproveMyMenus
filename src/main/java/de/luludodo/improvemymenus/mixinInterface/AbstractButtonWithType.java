@@ -1,9 +1,9 @@
 package de.luludodo.improvemymenus.mixinInterface;
 
-public interface CycleButtonWithType {
+public interface AbstractButtonWithType {
     enum Type {
         NORMAL,
-        SWITCH
+        ON_OFF
     }
 
     void improvemymenus$setType(Type type);

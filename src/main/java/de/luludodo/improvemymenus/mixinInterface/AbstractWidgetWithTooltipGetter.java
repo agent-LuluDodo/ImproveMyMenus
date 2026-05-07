@@ -1,8 +1,7 @@
 package de.luludodo.improvemymenus.mixinInterface;
 
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.gui.components.Tooltip;
 
-public interface CycleButtonWithIndicators {
-    boolean improvemymenus$isIndicatorHovered();
-    Component improvemymenus$getIndicatorMessage();
+public interface AbstractWidgetWithTooltipGetter {
+    Tooltip improvemymenus$getTooltip();
 }

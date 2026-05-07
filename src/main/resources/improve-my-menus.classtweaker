@@ -1,2 +1,8 @@
-accessWidener v2 official
+classTweaker v2 official
 accessible method net/minecraft/client/gui/components/AbstractSelectionList$Entry visitWidgets (Ljava/util/function/Consumer;)V
+accessible field net/minecraft/client/gui/components/AbstractButton SPRITES Lnet/minecraft/client/gui/components/WidgetSprites;
+accessible field net/minecraft/client/gui/components/AbstractButton overrideRenderHighlightedSprite Ljava/util/function/Supplier;
+accessible class net/minecraft/client/OptionInstance$SliderableValueSet
+accessible class net/minecraft/client/OptionInstance$CycleableValueSet
+mutable field net/minecraft/network/chat/CommonComponents OPTION_ON Lnet/minecraft/network/chat/Component;
+mutable field net/minecraft/network/chat/CommonComponents OPTION_OFF Lnet/minecraft/network/chat/Component;
