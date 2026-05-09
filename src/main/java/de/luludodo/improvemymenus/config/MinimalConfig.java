@@ -64,7 +64,7 @@ import java.util.function.ToIntFunction;
 /// ## Class
 ///
 /// ```java
-/// @Mod(name = "My Mod", id = "my-id")
+/// @MinimalConfig.Mod(name = "My Mod", id = "my-id")
 /// public class Config extends MinimalConfig {
 ///     public static final Config INSTANCE = new Config();
 ///

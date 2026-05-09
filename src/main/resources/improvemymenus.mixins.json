@@ -1,6 +1,9 @@
 {
   "required": true,
   "minVersion": "0.8",
+  "mixinextras": {
+    "minVersion": "0.5.0"
+  },
   "package": "de.luludodo.improvemymenus.mixin",
   "compatibilityLevel": "JAVA_25",
   "client": [
@@ -12,7 +15,13 @@
     "ContainerEventHandlerMixin",
     "CycleButtonBuilderMixin",
     "CycleButtonMixin",
+    "DebugOptionsScreenOptionEntryMixin",
+    "DebugOptionsScreenOptionListMixin",
+    "GuiGraphicsExtractorMixin",
+    "KeyboardHandlerMixin",
+    "OptionInstanceIntRangeBaseMixin",
     "OptionInstanceMixin",
+    "OptionInstanceSliderableEnumMixin",
     "OptionInstanceSliderButtonMixin",
     "OptionsMixin",
     "PreparedTextBuilderMixin",

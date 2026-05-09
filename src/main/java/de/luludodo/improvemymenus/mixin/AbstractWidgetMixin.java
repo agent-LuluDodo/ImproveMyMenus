@@ -3,8 +3,11 @@ package de.luludodo.improvemymenus.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReceiver;
 import de.luludodo.improvemymenus.config.Config;
+import de.luludodo.improvemymenus.mixinInterface.AbstractButtonWithType;
 import de.luludodo.improvemymenus.mixinInterface.AbstractWidgetWithTooltipGetter;
 import de.luludodo.improvemymenus.mixinInterface.CycleButtonWithIndicators;
+import de.luludodo.improvemymenus.util.DebugOptionsScreenUtil;
+import de.luludodo.improvemymenus.util.TextAdjustments;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
@@ -56,6 +59,25 @@ public abstract class AbstractWidgetMixin implements AbstractWidgetWithTooltipGe
                 return original;
             return Config.CycleButton.NEXT.matches(event) || Config.CycleButton.PREVIOUS.matches(event) ||
                     (Config.CycleButton.INDICATORS && self.improvemymenus$isIndicatorHovered() && Config.CycleButton.INDICATOR.matches(event));
+        }
+        return original;
+    }
+
+    @ModifyExpressionValue(
+            method = "extractScrollingStringOverContents",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/components/AbstractWidget;getX()I"
+            )
+    )
+    private int improvemymenus$adjustText(int original) {
+        if (this instanceof AbstractButtonWithType buttonWithType) {
+            return switch (buttonWithType.improvemymenus$getType()) {
+                case DEBUG_OPTION_LEFT -> original + DebugOptionsScreenUtil.leftAdjustment();
+                case DEBUG_OPTION_CENTER -> original + DebugOptionsScreenUtil.centerAdjustment();
+                case DEBUG_OPTION_RIGHT -> original + DebugOptionsScreenUtil.rightAdjustment();
+                default -> original;
+            };
         }
         return original;
     }

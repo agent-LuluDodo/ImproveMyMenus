@@ -34,8 +34,19 @@ public class Config extends MinimalConfig {
     }
 
     public static class Slider {
-        public static boolean SEPARATORS = true;
+
+        @IntSlider(min = 0, max = 50)
+        public static int MAX_INDICATORS = 5;
+
         public static boolean HIGHLIGHT = false;
+
+        public static Spacing SPACING = Spacing.VISUAL;
+        public static Spacing ENUM_SPACING = Spacing.MIXED;
+        public enum Spacing {
+            VISUAL,
+            AREA,
+            MIXED
+        }
 
         public static SnapTiming SNAP = SnapTiming.ON_RELEASE;
         public enum SnapTiming {
@@ -44,13 +55,7 @@ public class Config extends MinimalConfig {
             WHILE_DRAGGING
         }
 
-        public static Spacing SPACING = Spacing.VISUAL;
-        public enum Spacing {
-            VANILLA,
-            VANILLA_PLUS,
-            VISUAL,
-            AREA
-        }
+        public static boolean FORCE_CURSOR = true;
     }
 
     public static class List {
@@ -60,6 +65,8 @@ public class Config extends MinimalConfig {
             PREFER_PARENT,
             PREFER_CHILDREN
         }
+
+        public static boolean FORCE_CURSOR = true;
     }
 
     public static class Other {
@@ -71,6 +78,8 @@ public class Config extends MinimalConfig {
         }
 
         public static boolean UNBLUR_VIDEO_SETTINGS = true;
+
+        public static boolean IMPROVE_DEBUG_OPTIONS = true;
         
         public static boolean MNEMONICS = true;
 

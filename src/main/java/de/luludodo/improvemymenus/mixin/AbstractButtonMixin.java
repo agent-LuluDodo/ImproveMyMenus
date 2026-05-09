@@ -64,6 +64,43 @@ public abstract class AbstractButtonMixin implements AbstractButtonWithType {
             IdentifierUtil.id("on_off_button/button_off_highlighted")
     );
 
+    @Unique
+    private static final WidgetSprites IMPROVEMYMENUS$DEBUG_OPTION_LEFT = new WidgetSprites(
+            IdentifierUtil.id("debug_option/left"),
+            IdentifierUtil.id("debug_option/left_highlighted")
+    );
+
+    @Unique
+    private static final WidgetSprites IMPROVEMYMENUS$DEBUG_OPTION_LEFT_PRESSED = new WidgetSprites(
+            IdentifierUtil.id("debug_option/left_pressed"),
+            IdentifierUtil.id("debug_option/left_pressed_highlighted")
+    );
+
+    @Unique
+    private static final WidgetSprites IMPROVEMYMENUS$DEBUG_OPTION_CENTER = new WidgetSprites(
+            IdentifierUtil.id("debug_option/center"),
+            IdentifierUtil.id("debug_option/center_highlighted")
+    );
+
+    @Unique
+    private static final WidgetSprites IMPROVEMYMENUS$DEBUG_OPTION_CENTER_PRESSED = new WidgetSprites(
+            IdentifierUtil.id("debug_option/center_pressed"),
+            IdentifierUtil.id("debug_option/center_pressed_highlighted")
+    );
+
+    @Unique
+    private static final WidgetSprites IMPROVEMYMENUS$DEBUG_OPTION_RIGHT = new WidgetSprites(
+            IdentifierUtil.id("debug_option/right"),
+            IdentifierUtil.id("debug_option/right_highlighted")
+    );
+
+    @Unique
+    private static final WidgetSprites IMPROVEMYMENUS$DEBUG_OPTION_RIGHT_PRESSED = new WidgetSprites(
+            IdentifierUtil.id("debug_option/right_pressed"),
+            IdentifierUtil.id("debug_option/right_pressed_highlighted")
+    );
+
+    @SuppressWarnings("ConstantValue")
     @ModifyReceiver(
             method = "extractDefaultSprite",
             at = @At(
@@ -72,10 +109,19 @@ public abstract class AbstractButtonMixin implements AbstractButtonWithType {
             )
     )
     private WidgetSprites improvemymenus$modifySprite(WidgetSprites original, boolean enabled, boolean focused) {
+        boolean boolValue = ((Object) this instanceof CycleButton<?> cb) && cb.getValue() instanceof Boolean bool && bool;
         if (Config.CycleButton.SWITCHES && improvemymenus$type == Type.ON_OFF) {
-            //noinspection unchecked, DataFlowIssue
-            return ((CycleButton<Boolean>) (Object) this).getValue() ?
-                    IMPROVEMYMENUS$ON_BUTTON : IMPROVEMYMENUS$OFF_BUTTON;
+            return boolValue ? IMPROVEMYMENUS$ON_BUTTON : IMPROVEMYMENUS$OFF_BUTTON;
+        } else if (Config.Other.IMPROVE_DEBUG_OPTIONS) {
+            return switch (improvemymenus$type) {
+                case DEBUG_OPTION_LEFT -> boolValue ?
+                        IMPROVEMYMENUS$DEBUG_OPTION_LEFT_PRESSED : IMPROVEMYMENUS$DEBUG_OPTION_LEFT;
+                case DEBUG_OPTION_CENTER -> boolValue ?
+                        IMPROVEMYMENUS$DEBUG_OPTION_CENTER_PRESSED : IMPROVEMYMENUS$DEBUG_OPTION_CENTER;
+                case DEBUG_OPTION_RIGHT -> boolValue ?
+                        IMPROVEMYMENUS$DEBUG_OPTION_RIGHT_PRESSED : IMPROVEMYMENUS$DEBUG_OPTION_RIGHT;
+                default -> original;
+            };
         } else {
             return original;
         }

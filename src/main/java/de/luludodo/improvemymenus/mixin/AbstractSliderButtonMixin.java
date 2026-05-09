@@ -1,7 +1,9 @@
 package de.luludodo.improvemymenus.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import de.luludodo.improvemymenus.config.Config;
 import de.luludodo.improvemymenus.mixinInterface.AbstractSliderButtonWithValueSet;
+import de.luludodo.improvemymenus.mixinInterface.GuiGraphicsExtractorWithLockableCursor;
 import de.luludodo.improvemymenus.mixinInterface.IdentifiableAbstractSliderButton;
 import de.luludodo.improvemymenus.util.Globals;
 import de.luludodo.improvemymenus.util.IdentifierUtil;
@@ -14,6 +16,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,6 +29,9 @@ import java.util.Optional;
 @Mixin(AbstractSliderButton.class)
 public abstract class AbstractSliderButtonMixin<T> extends AbstractWidget implements AbstractSliderButtonWithValueSet<T>, IdentifiableAbstractSliderButton {
 
+    @Shadow
+    private boolean dragging;
+
     private AbstractSliderButtonMixin(int x, int y, int width, int height, Component message) {
         super(x, y, width, height, message);
     }
@@ -34,15 +40,20 @@ public abstract class AbstractSliderButtonMixin<T> extends AbstractWidget implem
     private OptionInstance.SliderableValueSet<T> improvemymenus$valueSet;
 
     @Unique
+    private int improvemymenus$indicators;
+
+    @Unique
     private float[] improvemymenus$valueLocations;
 
     @Unique
-    private boolean improvemymenus$showSeparators = false;
+    private boolean improvemymenus$showIndicators = false;
 
-    @Unique private static final Identifier IMPROVEMYMENUS$SEPARATOR =
-            IdentifierUtil.id("slider/separator");
-    @Unique private static final Identifier IMPROVEMYMENUS$SEPARATOR_HIGHLIGHTED =
-            IdentifierUtil.id("slider/separator_highlighted");
+    @Unique private static final Identifier IMPROVEMYMENUS$INDICATOR =
+            IdentifierUtil.id("slider/indicator");
+    @Unique private static final Identifier IMPROVEMYMENUS$INDICATOR_UNFOCUSED =
+            IdentifierUtil.id("slider/indicator_unfocused");
+    @Unique private static final Identifier IMPROVEMYMENUS$INDICATOR_HIGHLIGHTED =
+            IdentifierUtil.id("slider/indicator_highlighted");
 
     @Unique
     private Object improvemymenus$identifier = null;
@@ -59,15 +70,18 @@ public abstract class AbstractSliderButtonMixin<T> extends AbstractWidget implem
         if (Config.Other.UNBLUR_VIDEO_SETTINGS && improvemymenus$identifier == Globals.MENU_BACKGROUND_BLUR_SLIDER_IDENTIFIER)
             Globals.MENU_BACKGROUND_BLUR_SLIDER_HOVERED_OR_FOCUSED = isHoveredOrFocused();
 
-        if (!improvemymenus$showSeparators || !Config.Slider.SEPARATORS) return;
+        if (!improvemymenus$showIndicators || Config.Slider.MAX_INDICATORS == 0 || improvemymenus$indicators == 0 ||
+                improvemymenus$indicators > Config.Slider.MAX_INDICATORS) return;
 
         int x = getX() + 4;
         int y = getY();
         int width = getWidth() - 8;
         int height = getHeight();
 
+        boolean focused = isHoveredOrFocused();
+
         float preview = -1;
-        if (Config.Slider.HIGHLIGHT && isHovered) {
+        if (Config.Slider.HIGHLIGHT && isHovered && this.active) {
             Minecraft mc = Minecraft.getInstance();
             // the mouseX passed to this function isn't accurate enough, since we need sub-pixel accuracy
             double accurateMouseX = mc.mouseHandler.getScaledXPos(mc.getWindow());
@@ -81,12 +95,47 @@ public abstract class AbstractSliderButtonMixin<T> extends AbstractWidget implem
             int curX = x + Math.round(width * location - 1.5f);
             graphics.blitSprite(
                     RenderPipelines.GUI_TEXTURED,
-                    Math.abs(location - preview) < 0.001f ? IMPROVEMYMENUS$SEPARATOR_HIGHLIGHTED : IMPROVEMYMENUS$SEPARATOR,
+                    focused ? Math.abs(location - preview) < 0.001f ? IMPROVEMYMENUS$INDICATOR_HIGHLIGHTED : IMPROVEMYMENUS$INDICATOR : IMPROVEMYMENUS$INDICATOR_UNFOCUSED,
                     curX,
                     y,
                     3,
                     height
             );
+        }
+    }
+
+    @Unique
+    private boolean improvemymenus$lockCursor = false;
+
+    @ModifyExpressionValue(
+            method = "handleCursor",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/components/AbstractSliderButton;isHovered()Z",
+                    ordinal = 0
+            )
+    )
+    public boolean improvemymenus$forceCursor(boolean original) {
+        if (Config.Slider.FORCE_CURSOR && isActive() && dragging) {
+            improvemymenus$lockCursor = true;
+            return true;
+        }
+        return original;
+    }
+
+    @Inject(
+            method = "handleCursor",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;requestCursor(Lcom/mojang/blaze3d/platform/cursor/CursorType;)V",
+                    ordinal = 0,
+                    shift = At.Shift.AFTER
+            )
+    )
+    public void improvemymenus$lockCursor(GuiGraphicsExtractor graphics, CallbackInfo ci) {
+        if (improvemymenus$lockCursor) {
+            improvemymenus$lockCursor = false;
+            GuiGraphicsExtractorWithLockableCursor.lockCursor(graphics);
         }
     }
 
@@ -97,7 +146,7 @@ public abstract class AbstractSliderButtonMixin<T> extends AbstractWidget implem
         T prev;
         T cur = valueSet.fromSliderValue(0d);
         int i = 0;
-        while (i < 10) {
+        while (i < 50) {
             values.add(cur);
             Optional<T> next = valueSet.next(cur).flatMap(valueSet::validateValue);
             if (next.isEmpty()) break;
@@ -106,13 +155,14 @@ public abstract class AbstractSliderButtonMixin<T> extends AbstractWidget implem
             if (prev == cur) break;
             i++;
         }
-        if (i < 10) {
-            improvemymenus$showSeparators = true;
+        if (i < 50) {
+            improvemymenus$showIndicators = true;
             int length = values.size();
             this.improvemymenus$valueLocations = new float[length];
             for (int j = 0; j < length; j++) {
                 this.improvemymenus$valueLocations[j] = (float) valueSet.toSliderValue(values.get(j));
             }
+            improvemymenus$indicators = i <= 1 ? 0 : i - 1;
         }
     }
 

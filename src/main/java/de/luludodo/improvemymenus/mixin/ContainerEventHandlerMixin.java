@@ -24,7 +24,6 @@ public interface ContainerEventHandlerMixin {
                 int old = guiScale.get();
                 int adjustedOld = (old == 0 || old > range.maxInclusive()) ? range.maxInclusive() + 1 : old;
                 int newValue = adjustedOld + (int) Math.signum(scrollY);
-                System.out.println("old: " + old + " new: " + newValue +  " max: " + range.maxInclusive() + " min: " + range.minInclusive());
                 if (newValue != 0 && newValue <= range.maxInclusive() && newValue >= range.minInclusive()) {
                     guiScale.set(newValue);
                     screen.resize(screen.width, screen.height);

@@ -29,6 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -102,6 +103,9 @@ public abstract class CycleButtonMixin<T> extends AbstractButton implements Cycl
         if (this.improvemymenus$getType() != Type.NORMAL || !Config.CycleButton.INDICATORS) return;
 
         List<T> values = this.values.getSelectedList();
+
+        boolean reverse = values.size() == 2 && Objects.equals(values.get(0), true) && Objects.equals(values.get(1), false);
+
         int count = values.size();
         int index = this.index;
         int width = this.getWidth() - 2;
@@ -124,7 +128,7 @@ public abstract class CycleButtonMixin<T> extends AbstractButton implements Cycl
         boolean focused = isHoveredOrFocused();
 
         for (int i = 0; i < count; i++) {
-            int startX = x + i * elementWidth;
+            int startX = x + (reverse ? count - 1 - i : i) * elementWidth;
             int endX = startX + elementWidth;
 
             boolean hovered = this.active &&
@@ -240,7 +244,7 @@ public abstract class CycleButtonMixin<T> extends AbstractButton implements Cycl
             at = @At("RETURN")
     )
     private static CycleButton.Builder<Boolean> improvemymenus$switch(CycleButton.Builder<Boolean> original) {
-        ((CycleButtonBuilderWithType) original).improvemymenus$setType(CycleButtonBuilderWithType.Type.ON_OFF_BUILDER);
+        CycleButtonBuilderWithType.setType(original, CycleButtonBuilderWithType.Type.ON_OFF_BUILDER);
         return original;
     }
 
