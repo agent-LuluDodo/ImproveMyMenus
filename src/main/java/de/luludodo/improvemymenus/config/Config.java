@@ -11,6 +11,42 @@ import static de.luludodo.improvemymenus.config.MinimalConfig.Mod;
 public class Config extends MinimalConfig {
     public static Config INSTANCE = new Config();
 
+    @SuppressWarnings("unused")
+    public static class Preset {
+        public static void defaults() {
+            INSTANCE.reset();
+        }
+
+        public static void vanilla() {
+            CycleButton.SCROLL = true;
+            CycleButton.SHOW_ALTERNATIVES = Modifier.ALT;
+            CycleButton.NEXT = ButtonBinding.LEFT;
+            CycleButton.PREVIOUS = ButtonBinding.SHIFT_LEFT;
+            CycleButton.INDICATORS = false;
+            CycleButton.INDICATOR = ButtonBinding.UNBOUND;
+            CycleButton.SWITCHES = false;
+            CycleButton.DROPDOWN = ButtonBinding.UNBOUND;
+            CycleButton.ON_OFF_COLORS = false;
+            CycleButton.RANDOM_COLORS = false;
+
+            Slider.MAX_INDICATORS = 0;
+            Slider.HIGHLIGHT = false;
+            Slider.SPACING = Slider.Spacing.AREA;
+            Slider.ENUM_SPACING = Slider.Spacing.MIXED;
+            Slider.SNAP = Slider.SnapTiming.VANILLA;
+            Slider.FORCE_CURSOR = false;
+
+            List.SCROLL_BEHAVIOUR = List.ScrollBehaviour.ONLY_PARENT;
+            List.FORCE_CURSOR = false;
+
+            Other.ZOOM = Other.ZoomOptions.VIDEO_SETTINGS;
+            Other.UNBLUR_VIDEO_SETTINGS = false;
+            Other.IMPROVE_DEBUG_OPTIONS = false;
+
+            INSTANCE.refresh();
+        }
+    }
+
     public static class CycleButton {
         public static boolean SCROLL = true;
 
@@ -24,7 +60,7 @@ public class Config extends MinimalConfig {
 
         public static boolean SWITCHES = true;
 
-        public static ButtonBinding DROPDOWN = ButtonBinding.UNBOUND;
+        public static ButtonBinding DROPDOWN = ButtonBinding.RIGHT;
 
         @OnChange("reloadCommonComponents")
         public static boolean ON_OFF_COLORS = true;
@@ -70,7 +106,7 @@ public class Config extends MinimalConfig {
     }
 
     public static class Other {
-        public static ZoomOptions ZOOM = ZoomOptions.VIDEO_SETTINGS;
+        public static ZoomOptions ZOOM = ZoomOptions.EVERYWHERE;
         public enum ZoomOptions {
             NOWHERE,
             VIDEO_SETTINGS,
@@ -80,11 +116,6 @@ public class Config extends MinimalConfig {
         public static boolean UNBLUR_VIDEO_SETTINGS = true;
 
         public static boolean IMPROVE_DEBUG_OPTIONS = true;
-        
-        public static boolean MNEMONICS = true;
-
-        @IntSlider(min = 0, max = 100)
-        public static int CLICK_DELAY_MS = 25;
     }
 
     public enum Modifier {

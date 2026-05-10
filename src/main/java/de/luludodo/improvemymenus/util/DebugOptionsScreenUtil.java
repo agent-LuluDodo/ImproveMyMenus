@@ -1,11 +1,7 @@
 package de.luludodo.improvemymenus.util;
 
 import de.luludodo.improvemymenus.config.Config;
-import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 
 public class DebugOptionsScreenUtil {
 

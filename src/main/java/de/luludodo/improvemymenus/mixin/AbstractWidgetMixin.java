@@ -7,7 +7,6 @@ import de.luludodo.improvemymenus.mixinInterface.AbstractButtonWithType;
 import de.luludodo.improvemymenus.mixinInterface.AbstractWidgetWithTooltipGetter;
 import de.luludodo.improvemymenus.mixinInterface.CycleButtonWithIndicators;
 import de.luludodo.improvemymenus.util.DebugOptionsScreenUtil;
-import de.luludodo.improvemymenus.util.TextAdjustments;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
@@ -54,10 +53,13 @@ public abstract class AbstractWidgetMixin implements AbstractWidgetWithTooltipGe
     private boolean improvemymenus$isValidClickButton(boolean original, MouseButtonEvent event) {
         if (this instanceof CycleButtonWithIndicators self) {
             if ((!Config.CycleButton.INDICATORS || Config.CycleButton.INDICATOR == Config.ButtonBinding.LEFT) &&
+                    Config.CycleButton.DROPDOWN == Config.ButtonBinding.UNBOUND &&
                     Config.CycleButton.NEXT == Config.ButtonBinding.LEFT &&
                     Config.CycleButton.PREVIOUS == Config.ButtonBinding.SHIFT_LEFT)
                 return original;
-            return Config.CycleButton.NEXT.matches(event) || Config.CycleButton.PREVIOUS.matches(event) ||
+            return Config.CycleButton.DROPDOWN.matches(event) ||
+                    Config.CycleButton.NEXT.matches(event) ||
+                    Config.CycleButton.PREVIOUS.matches(event) ||
                     (Config.CycleButton.INDICATORS && self.improvemymenus$isIndicatorHovered() && Config.CycleButton.INDICATOR.matches(event));
         }
         return original;

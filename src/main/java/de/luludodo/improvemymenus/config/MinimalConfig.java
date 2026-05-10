@@ -7,6 +7,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.client.resources.language.I18n;
@@ -122,8 +124,8 @@ public class MinimalConfig {
     private static class Screen extends OptionsSubScreen {
         private final Category[] categories;
         private final Runnable save;
-        private Screen(net.minecraft.client.gui.screens.Screen parent, Category[] categories, String title, Runnable save) {
-            super(parent, Minecraft.getInstance().options, Component.translatable(title));
+        private Screen(net.minecraft.client.gui.screens.Screen parent, Category[] categories, Component title, Runnable save) {
+            super(parent, Minecraft.getInstance().options, title);
             this.categories = categories;
             this.save = save;
         }
@@ -133,12 +135,28 @@ public class MinimalConfig {
             assert this.list != null;
             for (Category category : categories) {
                 this.list.addHeader(category.header());
-                OptionInstance<?>[] instances = new OptionInstance<?>[category.options.length];
-                for (int i = 0; i < instances.length; i++) {
-                    instances[i] = category.options[i].instance;
+
+                AbstractWidget[] widgets = new AbstractWidget[category.actions.length + category.options.length];
+
+                for (int i = 0; i < category.actions.length; i++) {
+                    Action action = category.actions[i];
+                    Button button = action.button;
+                    if (I18n.exists(action.tooltipId)) {
+                        button.setTooltip(Tooltip.create(Component.translatable(action.tooltipId)));
+                    }
+                    widgets[i] = button;
                 }
-                this.list.addSmall(instances);
+
+                for (int i = 0; i < category.options.length; i++) {
+                    widgets[i + category.actions.length] = category.options[i].instance.createButton(this.options);
+                }
+
+                this.list.addSmall(List.of(widgets));
             }
+        }
+
+        public void refresh() {
+            minecraft.setScreen(new Screen(lastScreen, categories, title, save));
         }
 
         @Override
@@ -148,14 +166,30 @@ public class MinimalConfig {
         }
     }
 
-    private record Category(String name, Component header, Option[] options) {}
+    private record Category(String name, Component header, Action[] actions, Option[] options) {}
 
-    private record Option(String name, Class<?> type, OptionInstance<?> instance) {
+    private sealed interface Entry permits Action, Option {}
+
+    private record Action(String name, Button button, String tooltipId, Method method) implements Entry {
+        private void run() {
+            try {
+                method.invoke(null);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new IllegalStateException("Could not run method '" + method.getName() + "'", e);
+            }
+        }
+    }
+
+    private record Option(String name, Class<?> type, OptionInstance<?> instance, Object defaultValue) implements Entry {
         private void set(Object value) {
             OptionInstance<Object> objectInstance = uncheckedCast(instance);
             objectInstance.set(value);
             if (!Minecraft.getInstance().isRunning())
                 objectInstance.onValueUpdate.accept(value);
+        }
+
+        private void reset() {
+            set(defaultValue);
         }
     }
 
@@ -186,14 +220,33 @@ public class MinimalConfig {
 
             String category = category(subClass);
             String categoryId = this.title + "." + category;
+
+            List<Action> actions = new ArrayList<>();
+
+            for (Method method : subClass.getDeclaredMethods()) {
+                String action = action(method);
+                String actionId = categoryId + "." + action;
+
+                actions.add(new Action(
+                        action,
+                        actionButton(
+                                actionId,
+                                method
+                        ),
+                        actionId + ".tooltip",
+                        method
+                ));
+            }
+
             List<Option> options = new ArrayList<>();
 
             for (Field field : subClass.getDeclaredFields()) {
-                String option = option(category, field);
+                String option = option(field);
                 String optionId = categoryId + "." + option;
 
                 Class<?> type = field.getType();
                 try {
+                    Object value = field.get(null);
                     if (type == boolean.class) {
                         options.add(new Option(
                                 option,
@@ -202,7 +255,8 @@ public class MinimalConfig {
                                         optionId,
                                         field,
                                         subClass
-                                )
+                                ),
+                                value
                         ));
                     } else if (type == int.class) {
                         options.add(new Option(
@@ -212,7 +266,8 @@ public class MinimalConfig {
                                         optionId,
                                         field,
                                         subClass
-                                )
+                                ),
+                                value
                         ));
                     } else if (type.isEnum()) {
                         options.add(new Option(
@@ -224,7 +279,8 @@ public class MinimalConfig {
                                         field,
                                         type,
                                         subClass
-                                )
+                                ),
+                                value
                         ));
                     } else {
                         throw new IllegalStateException("Unknown field type: " + type);
@@ -237,6 +293,7 @@ public class MinimalConfig {
             categories.add(new Category(
                     category,
                     Component.translatable(categoryId),
+                    actions.toArray(Action[]::new),
                     options.toArray(Option[]::new)
             ));
         }
@@ -420,7 +477,72 @@ public class MinimalConfig {
     ///
     /// @return The newly instantiated {@link OptionsSubScreen}
     public @NotNull OptionsSubScreen getScreen(net.minecraft.client.gui.screens.Screen parent) {
-        return new Screen(parent, this.categories, this.title, this::save);
+        return new Screen(parent, this.categories, Component.translatable(this.title), this::save);
+    }
+
+    /// Resets the config to its default values
+    public void reset() {
+        for (Category category : categories) {
+            for (Option option : category.options) {
+                option.reset();
+            }
+        }
+
+        if (Minecraft.getInstance().screen instanceof Screen configScreen) {
+            configScreen.refresh();
+        }
+
+        save();
+    }
+
+    /// Refreshes the config
+    ///
+    /// Updates the config based on the fields,
+    /// use this if you manually changed config options,
+    /// by assigning to a field.
+    public void refresh() {
+        Map<String, Map<String, Field>> classToFieldMap = new HashMap<>();
+        for (Class<?> subClass : getClass().getDeclaredClasses()) {
+            if (subClass.isEnum()) continue;
+
+            Map<String, Field> fieldMap = new HashMap<>();
+            classToFieldMap.put(category(subClass), fieldMap);
+
+            for (Field field : subClass.getDeclaredFields()) {
+                fieldMap.put(option(field), field);
+            }
+        }
+
+        for (Category category : categories) {
+            Map<String, Field> fieldMap = classToFieldMap.get(category.name);
+            for (Option option : category.options) {
+                Field field = fieldMap.get(option.name);
+                try {
+                    option.set(field.get(null));
+                } catch (IllegalAccessException e) {
+                    throw new IllegalStateException("Could not get option '" + option.name + "' in category '" + category.name + "'", e);
+                }
+            }
+        }
+
+        if (Minecraft.getInstance().screen instanceof Screen configScreen) {
+            configScreen.refresh();
+        }
+
+        save();
+    }
+
+    private static Button actionButton(String action, Method method) {
+        return Button.builder(
+                Component.translatable(action),
+                _ -> {
+                    try {
+                        method.invoke(null);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new IllegalStateException("Could not run method '" + method.getName() + "'", e);
+                    }
+                }
+        ).build();
     }
 
     private static OptionInstance<Boolean> boolOption(String option, Field field, Class<?> parent) throws IllegalAccessException {
@@ -523,15 +645,25 @@ public class MinimalConfig {
     }
 
     private static String category(Class<?> category) {
+        return classOrFieldName(category.getSimpleName(), false);
+    }
+
+    private static String action(Method method) {
+        return classOrFieldName(method.getName(), true);
+    }
+
+    private static String classOrFieldName(String name, boolean fieldName) {
         StringBuilder result = new StringBuilder();
         boolean first = true;
-        PrimitiveIterator.OfInt codepoints = category.getSimpleName().chars().iterator();
+        PrimitiveIterator.OfInt codepoints = name.chars().iterator();
         while (codepoints.hasNext()) {
             int codepoint = codepoints.nextInt();
             int lowercase = Character.toLowerCase(codepoint);
             if (first) {
-                if (lowercase == codepoint)
+                if (!fieldName && lowercase == codepoint)
                     throw new IllegalStateException("Expected first character of classname to be uppercase!");
+                if (fieldName && lowercase != codepoint)
+                    throw new IllegalStateException("Expected first character of fieldname to be lowercase!");
                 first = false;
             } else if (lowercase != codepoint) {
                 result.append('_');
@@ -541,12 +673,12 @@ public class MinimalConfig {
         return result.toString();
     }
 
-    private static String option(String category, Field field) {
+    private static String option(Field field) {
         return field.getName().toLowerCase(Locale.ROOT);
     }
 
     private static <T> OptionInstance.TooltipSupplier<T> intTooltipSupplier(String option) {
-        return (value) -> {
+        return _ -> {
             String id = option + ".tooltip";
             if (I18n.exists(id)) {
                 return Tooltip.create(Component.translatable(id));
@@ -557,7 +689,7 @@ public class MinimalConfig {
     }
 
     private static <T> OptionInstance.CaptionBasedToString<T> enumStringifier(String option) {
-        return (caption, value) -> Component.translatable(enumValue(option, value));
+        return (_, value) -> Component.translatable(enumValue(option, value));
     }
 
     private static <T> OptionInstance.TooltipSupplier<T> enumTooltipSupplier(String option) {
@@ -577,7 +709,7 @@ public class MinimalConfig {
     }
 
     private static OptionInstance.CaptionBasedToString<Boolean> booleanStringifier(String option) {
-        return (caption, value) -> {
+        return (_, value) -> {
             String id = option + "." + (value ? "on" : "off");
             if (I18n.exists(id)) {
                 return Component.translatable(id);

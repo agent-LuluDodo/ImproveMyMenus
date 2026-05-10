@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import de.luludodo.improvemymenus.config.Config;
 import de.luludodo.improvemymenus.mixinInterface.*;
+import de.luludodo.improvemymenus.util.DropdownOverlayScreen;
 import de.luludodo.improvemymenus.util.Globals;
 import de.luludodo.improvemymenus.util.IdentifierUtil;
 import net.minecraft.ChatFormatting;
@@ -34,7 +35,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Mixin(CycleButton.class)
-public abstract class CycleButtonMixin<T> extends AbstractButton implements CycleButtonWithIndicators, AbstractButtonWithType {
+public abstract class CycleButtonMixin<T> extends AbstractButton implements CycleButtonWithIndicators, AbstractButtonWithType, CycleButtonWithDropdown {
     @Shadow
     @Final
     private CycleButton.ValueListSupplier<T> values;
@@ -57,6 +58,15 @@ public abstract class CycleButtonMixin<T> extends AbstractButton implements Cycl
 
     @Shadow
     private T value;
+    @Shadow
+    @Final
+    private CycleButton.SpriteSupplier<T> spriteSupplier;
+    @Shadow
+    @Final
+    private Function<T, Component> valueStringifier;
+    @Shadow
+    @Final
+    private CycleButton.OnValueChange<T> onValueChange;
     @Unique
     private boolean improvemymenus$indicatorHovered = false;
 
@@ -98,6 +108,9 @@ public abstract class CycleButtonMixin<T> extends AbstractButton implements Cycl
         if (Globals.RELOAD_MESSAGES) {
             updateValue(value);
         }
+
+        if (!improvemymenus$indicatorHovered)
+            improvemymenus$hoveredIndex = -1;
 
         improvemymenus$indicatorHovered = false;
         if (this.improvemymenus$getType() != Type.NORMAL || !Config.CycleButton.INDICATORS) return;
@@ -152,25 +165,27 @@ public abstract class CycleButtonMixin<T> extends AbstractButton implements Cycl
 
             if (hovered) {
                 improvemymenus$indicatorHovered = true;
-                improvemymenus$hoveredIndex = i;
-                if (i == index) {
-                    improvemymenus$indicatorMessage = message;
-                    improvemymenus$indicatorTooltip.set(((AbstractWidgetWithTooltipGetter) this).improvemymenus$getTooltip());
-                } else {
-                    T value = values.get(i);
-                    MutableComponent message = createLabelForValue(value).copy();
-                    Style style = message.getStyle();
-                    TextColor color = style.getColor();
-                    if (color == null) {
-                        improvemymenus$indicatorMessage = message.withStyle(
-                                style.withColor(TextColorWithAlpha.fromArgb(0xAAFFFFFF))
-                        );
+                if (improvemymenus$hoveredIndex != i) {
+                    improvemymenus$hoveredIndex = i;
+                    if (i == index) {
+                        improvemymenus$indicatorMessage = message;
+                        improvemymenus$indicatorTooltip.set(((AbstractWidgetWithTooltipGetter) this).improvemymenus$getTooltip());
                     } else {
-                        improvemymenus$indicatorMessage = message.withStyle(
-                                style.withColor(TextColorWithAlpha.withAlpha(color, 0xAA))
-                        );
+                        T value = values.get(i);
+                        MutableComponent message = createLabelForValue(value).copy();
+                        Style style = message.getStyle();
+                        TextColor color = style.getColor();
+                        if (color == null) {
+                            improvemymenus$indicatorMessage = message.withStyle(
+                                    style.withColor(TextColorWithAlpha.fromArgb(0xAAFFFFFF))
+                            );
+                        } else {
+                            improvemymenus$indicatorMessage = message.withStyle(
+                                    style.withColor(TextColorWithAlpha.withAlpha(color, 0xAA))
+                            );
+                        }
+                        improvemymenus$indicatorTooltip.set(tooltipSupplier.apply(value));
                     }
-                    improvemymenus$indicatorTooltip.set(tooltipSupplier.apply(value));
                 }
             }
         }
@@ -186,6 +201,9 @@ public abstract class CycleButtonMixin<T> extends AbstractButton implements Cycl
     private void improvemymenus$onIndicatorPress(InputWithModifiers input, CallbackInfo ci) {
         if (improvemymenus$indicatorHovered && Config.CycleButton.INDICATOR.matches(input)) {
             cycleValue(improvemymenus$hoveredIndex - index);
+            ci.cancel();
+        } else if (Config.CycleButton.DROPDOWN.matches(input)) {
+            improvemymenus$openDropdown();
             ci.cancel();
         }
     }
@@ -306,5 +324,21 @@ public abstract class CycleButtonMixin<T> extends AbstractButton implements Cycl
             return (R) component.copy().withStyle(color);
         }
         return original;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void improvemymenus$openDropdown() {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.screen != null) {
+            minecraft.setScreen(new DropdownOverlayScreen<>(
+                    minecraft.screen,
+                    (CycleButton<T>) (Object) this,
+                    this.values,
+                    this.spriteSupplier,
+                    this.valueStringifier,
+                    this.onValueChange
+            ));
+        }
     }
 }

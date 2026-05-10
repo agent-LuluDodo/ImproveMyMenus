@@ -1,5 +1,10 @@
 {
   "improvemymenus.options": "Improve My Menus Config",
+  "improvemymenus.options.preset": "Presets",
+  "improvemymenus.options.preset.defaults": "Default",
+  "improvemymenus.options.preset.defaults.tooltip": "Resets all settings to their default values.",
+  "improvemymenus.options.preset.vanilla": "Vanilla",
+  "improvemymenus.options.preset.vanilla.tooltip": "Disables every features this mod provides.",
   "improvemymenus.options.modifier.never": "Never",
   "improvemymenus.options.modifier.alt": "Alt",
   "improvemymenus.options.modifier.shift": "Shift",
@@ -115,5 +120,6 @@
   "improvemymenus.debug.options.visualize_sky_light_sections": "Sky Light Sections",
   "improvemymenus.debug.options.visualize_solid_faces": "Solid Faces",
   "improvemymenus.debug.options.visualize_water_levels": "Water Levels",
-  "improvemymenus.debug.options.tooltip.default": "Default: %s"
+  "improvemymenus.debug.options.tooltip.default": "Default: %s",
+  "improvemymenus.dropdown.title": "Dropdown"
 }
