@@ -15,7 +15,7 @@ Most features added by this mod only slightly tweak Vanilla behavior to feel smo
 There are also some bigger additions like indicators, but I tried to avoid big changes away from Vanilla.
 Finally, I also added the ability to customize some normally hard-coded key bindings.
 
-![Comparison between Vanilla and ImproveMyMenus](README-images/Comparison.png)
+![Comparison between Vanilla and ImproveMyMenus](README-images/Comparison.jpg)
 
 # Features
 
