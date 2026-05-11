@@ -15,11 +15,7 @@ Most features added by this mod only slightly tweak Vanilla behavior to feel smo
 There are also some bigger additions like indicators, but I tried to avoid big changes away from Vanilla.
 Finally, I also added the ability to customize some normally hard-coded key bindings.
 
-# Feedback
-
-Since my goal is to improve user experience with Minecraft's menus,
-I would greatly appreciate feedback.
-Feel free to fill out this [short form](https://forms.gle/7f7TYWbX2aogkBnu8) if you're interested in providing feedback.
+![Comparision between Vanilla and ImproveMyMenus](README-images/Comparison.png)
 
 # Features
 
@@ -114,5 +110,11 @@ Without Mod Menu you can also access the config by running the command `/improve
 
 Check out [Configuration](https://github.com/agent-LuluDodo/ImproveMyMenus/wiki/Configuration),
 if you are interested in detailed explanations of every config option. 
+
+# Feedback
+
+Since my goal is to improve user experience with Minecraft's menus,
+I would greatly appreciate feedback.
+Feel free to fill out this [short form](https://forms.gle/7f7TYWbX2aogkBnu8) if you're interested in providing feedback.
 
 [![© agent_LuluDodo](README-images/Footer.png)](https://github.com/agent-LuluDodo/ImproveMyMenus?tab=MIT-1-ov-file)
