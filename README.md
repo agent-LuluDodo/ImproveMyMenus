@@ -326,6 +326,3 @@ Another thing I noticed while testing my changes is that closing the "Debug Opti
 the title screen or in-game menu, so I also fixed that, making it return to the previous screen.
 
 </details>
-
-*Disclaimer: The only usage of AI was a local model run as part of IntelliJ's built-in code completion.
-**No** coding agents, image generation software, etc. was used*

@@ -4,10 +4,10 @@ import net.minecraft.client.gui.components.AbstractSliderButton;
 
 public interface IdentifiableAbstractSliderButton {
     static void setIdentifier(AbstractSliderButton slider, Object identifier) {
-        ((IdentifiableAbstractSliderButton) (Object) slider).improvemymenus$setIdentifier(identifier);
+        ((IdentifiableAbstractSliderButton) slider).improvemymenus$setIdentifier(identifier);
     }
     static Object getIdentifier(AbstractSliderButton slider) {
-        return ((IdentifiableAbstractSliderButton) (Object) slider).improvemymenus$getIdentifier();
+        return ((IdentifiableAbstractSliderButton) slider).improvemymenus$getIdentifier();
     }
 
     void improvemymenus$setIdentifier(Object identifier);

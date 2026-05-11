@@ -18,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractButton.class)
 public abstract class AbstractButtonMixin implements AbstractButtonWithType {
-
     @Unique
     private Type improvemymenus$type;
 
