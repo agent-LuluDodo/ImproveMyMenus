@@ -6,7 +6,8 @@ A collection of small improvements to various aspects of Minecraft's menus.
 
 # Why?
 
-My aim with this mod was to improve the user experience of Minecraft's menus, while preserving the Vanilla feel and look.
+My aim with this mod was to improve the user experience of Minecraft's menus,
+while preserving the Vanilla feel and look.
 
 Most features added by this mod only slightly tweak Vanilla behavior to feel smoother and more responsive.
 There are also some bigger additions like indicators, but I tried to avoid big changes away from Vanilla.
