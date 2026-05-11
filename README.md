@@ -173,8 +173,6 @@ Hovering over an indicator and pressing this button will select the hovered indi
 Default: `ON`<br>
 Vanilla: `OFF`
 
-![A screenshot of a switch in the on position.](README-images/Switch.png)
-
 Minecraft uses cycle buttons for everything even in places where other kinds of buttons would be more appropriate.
 Enabling this features displays switches in some of these cases, greatly improving visually clarity.
 
