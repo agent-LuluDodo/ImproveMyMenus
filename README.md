@@ -6,17 +6,18 @@ A collection of small improvements to various aspects of Minecraft's menus.
 
 # Why?
 
-My aim with this mod was to improve the user experience of Minecraft's menus,
+My aim with this mod was to improve the user experience of Minecraft's menus
 while preserving the Vanilla feel and look.
 
 Most features added by this mod only slightly tweak Vanilla behavior to feel smoother and more responsive.
 There are also some bigger additions like indicators, but I tried to avoid big changes away from Vanilla.
-Finally, I also added the ability to customize some normally hard-coded key-bindings.
+Finally, I also added the ability to customize some normally hard-coded key bindings.
 
 # Feedback
 
-Since my goal is to improve user experience with Minecraft's menus I would greatly appreciate feedback.
-Feel free to fill out this [short form](https://forms.gle/7f7TYWbX2aogkBnu8) if your interested in providing feedback.
+Since my goal is to improve user experience with Minecraft's menus,
+I would greatly appreciate feedback.
+Feel free to fill out this [short form](https://forms.gle/7f7TYWbX2aogkBnu8) if you're interested in providing feedback.
 
 # Features
 
@@ -42,7 +43,7 @@ Helps you to immediately recognize the value of an On/Off button.
 
 ### Switches
 
-Transforms buttons which only contain the word ON or OFF into simpler, more recognizable switches.
+Transforms buttons that only contain the word ON or OFF into simpler, more recognizable switches.
 
 ![A screenshot of a switch in the on position](README-images/Switch.png)
 
@@ -56,8 +57,8 @@ Sliders with few values will have indicators, helping you use them.
 
 ### Snapping
 
-Vanilla has a 600ms delay before snapping for some slider, 
-removing this delay makes the slider feel more responsive.
+Vanilla has a 600ms delay before snapping for some sliders.
+ImproveMyMenus removes that delay making sliders feel more responsive.
 
 |                | Comparison                                                                                                       |
 |----------------|------------------------------------------------------------------------------------------------------------------|
@@ -93,9 +94,9 @@ Built-in support for the "High Contrast" Vanilla resource pack.
 
 ## Customization
 
-Every visual change can be modified using a resource pack, none of them are hard-coded.
-The "Debug Options" translations are extendable using a resource pack that means,
-you can add additional translations if you're using a mod with additional ones.
+Every visual change can be modified using a resource pack. None of them are hard-coded.
+The "Debug Options" translations are extendable using a resource pack, which means,
+you can add additional translations specific to other mods.
 Furthermore, tooltips are supported.
 
 Check out the [Resource Packs](https://github.com/agent-LuluDodo/ImproveMyMenus/wiki/Resource-Packs) for more information,
@@ -103,9 +104,9 @@ on how to customize ImproveMyMenus.
 
 # Configuration
 
-It's recommended to install [Mod Menu](https://modrinth.com/mod/modmenu) in order to access the mods configuration screen.
+It's recommended to install [Mod Menu](https://modrinth.com/mod/modmenu) in order to access the mod's configuration screen.
 
-Without mod menu you can also access the config by running the command `/improvemymenus-config`.
+Without Mod Menu you can also access the config by running the command `/improvemymenus-config`.
 
 ![A screenshot of the "Improve My Menus Config" screen.](README-images/Config%20Screen.png)
 
