@@ -19,7 +19,7 @@ Feel free to fill out this [short form](https://forms.gle/7f7TYWbX2aogkBnu8) if 
 
 # Features
 
-This mod contains a variate of features split into different categories.
+This mod contains a variety of features split into different categories.
 
 Feel free to create a [Feature Request]() if you want to request something new,
 or alternatively you can create a [Bug Report]() if something's broken.
@@ -121,7 +121,7 @@ Default: `ON`<br>
 Vanilla: `ON`
 
 Determines if scrolling will cycle values.
-When enabled scrolling up will select the previous value and scrolling down the next one.
+When enabled, scrolling up will select the previous value and scrolling down the next one.
 (Yes, this is the Vanilla behavior. No, I don't know why it's like this)
 
 ### Show Alternatives
@@ -182,7 +182,8 @@ Enabling this features displays switches in some of these cases, greatly improvi
 Default: `Unbound`<br>
 Vanilla: `Unbound`
 
-This is another big feature, but I'm not really happy with it, that's also why I didn't mention it under "Features".
+This is another big feature, but I'm not really happy with it. 
+That's also why I didn't mention it under "Features".
 But I decided to leave it in the mod since I had already coded it.
 
 When pressing the selected button a dropdown will open allowing you to select one of the possible values.
@@ -195,7 +196,7 @@ Clicking next to the buttons or pressing escape will close the dropdown and disc
 Default: `ON`<br>
 Vanilla: `OFF`
 
-This colors the words `ON` and `OFF` green and red respectively. (This is a small simplification)
+This colors the words `ON` and `OFF` green and red, respectively. (This is a small simplification)
 
 This isn't limited to cycle buttons, but usually only affects them.
 
@@ -204,7 +205,7 @@ This isn't limited to cycle buttons, but usually only affects them.
 Default: `OFF`<br>
 Vanilla: `OFF`
 
-Also, not really happy with this one, the set of possible colors is pretty small so duplicates occur way to often.
+Also, not really happy with this one, the set of possible colors is pretty small, so duplicates occur way too often.
 I might rework this in the future.
 
 Assigns a deterministic random color to every possible value, helping differentiate between values at a glance.
@@ -253,11 +254,11 @@ Vanilla: `Vanilla`
 
 Determines at which moment in time a slider should snap to the nearest discrete value.
 
-The vanilla behavior for some sliders is very weird, they snap after not moving for 600ms, 
+The Vanilla behavior for some sliders is very weird, they snap after not moving for 600ms, 
 even if you are still holding them. Otherwise, it's the same as On Release.
 
-On Release snaps as the name say upon releasing the slider.<br>
-While Dragging snaps while you are still dragging the slider, jumping between values.
+On Release snaps as the name says, upon releasing the slider.<br>
+While Dragging snaps, while you are still dragging the slider, jumping between values.
 
 ### Force Cursor
 
@@ -286,7 +287,7 @@ Prefer Children also scrolls the child element if the list can be scrolled.
 Default: `ON`<br>
 Vanilla: `OFF`
 
-When leaving the dragging the scrollbar handle outside the scrollbar area, the cursor looses its arrow shape.
+When dragging the scrollbar handle outside the scrollbar area, the cursor loses its arrow shape.
 Turning this on fixes that behavior and forces the cursor to remain an arrow until you release the handle.
 
 ## Other
@@ -296,7 +297,8 @@ Turning this on fixes that behavior and forces the cursor to remain an arrow unt
 Default: `Everywhere`<br>
 Vanilla: `In Video Settings`
 
-While coding this mod I discovered that you can zoom inside the Video Settings screen by pressing control and scrolling.
+While coding this mod, I discovered that you can zoom inside the Video Settings screen,
+by pressing control and scrolling.
 I decided to add a bit of customization to this behavior.
 
 Nowhere, disables this zooming behavior. 
@@ -308,7 +310,7 @@ Everywhere allows it everywhere.
 Default: `ON`<br>
 Vanilla: `OFF`
 
-Unblur the background in the "Video Settings" screen.
+Unblurs the background in the "Video Settings" screen.
 This helps see how different settings affect the visual clarity, 
 without having to close and reopen the settings.
 
@@ -322,7 +324,7 @@ So I decided to redesign this toggle, additionally I added translations for all 
 since they look better than raw ids.
 
 Another thing I noticed while testing my changes is that closing the "Debug Options" screen always returns to
-the title screen or in-game menu, so I also fixed that making it return the previous screen.
+the title screen or in-game menu, so I also fixed that, making it return to the previous screen.
 
 </details>
 
