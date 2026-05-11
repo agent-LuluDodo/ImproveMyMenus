@@ -327,4 +327,5 @@ the title screen or in-game menu, so I also fixed that, making it return to the 
 
 </details>
 
-*Disclaimer: The only usage of AI was a local model run as part of IntelliJ's built-in code completion, no coding agents, image generation software, etc. were used*
+*Disclaimer: The only usage of AI was a local model run as part of IntelliJ's built-in code completion.
+No coding agents, image generation software, etc. were used*
