@@ -15,12 +15,6 @@ Finally, I also added the ability to customize some normally hard-coded key-bind
 # Feedback
 
 Since my goal is to improve user experience with Minecraft's menus I would greatly appreciate feedback.
-Particularly on the following questions:
-
- - What feels out-of-place?
- - Which features confuse me?
- - What did something unexpected?
-
 Feel free to fill out this [short form](https://forms.gle/7f7TYWbX2aogkBnu8) if your interested in providing feedback.
 
 # Features
