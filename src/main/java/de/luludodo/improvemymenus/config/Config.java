@@ -17,6 +17,35 @@ public class Config extends MinimalConfig {
             INSTANCE.reset();
         }
 
+        public static void fixesOnly() {
+            CycleButton.SCROLL = true;
+            CycleButton.SHOW_ALTERNATIVES = Modifier.ALT;
+            CycleButton.NEXT = ButtonBinding.LEFT;
+            CycleButton.PREVIOUS = ButtonBinding.SHIFT_LEFT;
+            CycleButton.INDICATORS = false;
+            CycleButton.INDICATOR = ButtonBinding.UNBOUND;
+            CycleButton.SWITCHES = false;
+            CycleButton.DROPDOWN = ButtonBinding.UNBOUND;
+            CycleButton.ON_OFF_COLORS = false;
+            CycleButton.RANDOM_COLORS = false;
+
+            Slider.MAX_INDICATORS = 0;
+            Slider.HIGHLIGHT = false;
+            Slider.SPACING = Slider.Spacing.AREA;
+            Slider.ENUM_SPACING = Slider.Spacing.MIXED;
+            Slider.SNAP = Slider.SnapTiming.ON_RELEASE;
+            Slider.FORCE_CURSOR = true;
+
+            List.SCROLL_BEHAVIOUR = List.ScrollBehaviour.PREFER_PARENT;
+            List.FORCE_CURSOR = true;
+
+            Other.ZOOM = Other.ZoomOptions.VIDEO_SETTINGS;
+            Other.UNBLUR_VIDEO_SETTINGS = false;
+            Other.IMPROVE_DEBUG_OPTIONS = false;
+
+            INSTANCE.refresh();
+        }
+
         public static void vanilla() {
             CycleButton.SCROLL = true;
             CycleButton.SHOW_ALTERNATIVES = Modifier.ALT;
@@ -60,7 +89,7 @@ public class Config extends MinimalConfig {
 
         public static boolean SWITCHES = true;
 
-        public static ButtonBinding DROPDOWN = ButtonBinding.RIGHT;
+        public static ButtonBinding DROPDOWN = ButtonBinding.UNBOUND;
 
         @OnChange("reloadCommonComponents")
         public static boolean ON_OFF_COLORS = true;

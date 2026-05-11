@@ -141,6 +141,7 @@ public class MinimalConfig {
                 for (int i = 0; i < category.actions.length; i++) {
                     Action action = category.actions[i];
                     Button button = action.button;
+                    button.setFocused(false);
                     if (I18n.exists(action.tooltipId)) {
                         button.setTooltip(Tooltip.create(Component.translatable(action.tooltipId)));
                     }

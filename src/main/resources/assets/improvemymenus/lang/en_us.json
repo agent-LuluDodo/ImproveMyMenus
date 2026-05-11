@@ -5,6 +5,8 @@
   "improvemymenus.options.preset.defaults.tooltip": "Resets all settings to their default values.",
   "improvemymenus.options.preset.vanilla": "Vanilla",
   "improvemymenus.options.preset.vanilla.tooltip": "Disables every features this mod provides.",
+  "improvemymenus.options.preset.fixes_only": "Fixes Only",
+  "improvemymenus.options.preset.fixes_only.tooltip": "Disables all visual changes, while keeping fixes enabled.",
   "improvemymenus.options.modifier.never": "Never",
   "improvemymenus.options.modifier.alt": "Alt",
   "improvemymenus.options.modifier.shift": "Shift",
