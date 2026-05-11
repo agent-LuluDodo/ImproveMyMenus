@@ -1,6 +1,6 @@
 # [Download on Modrinth](https://modrinth.com/mod/improvemymenus)
 
-![A screenshot of the "Video Settings" screen with Improve My Menus enabled.](README-images/Comparison.png)
+![Improve My Menus Header](README-images/Header.png)
 
 A collection of small improvements to various aspects of Minecraft's menus.
 
@@ -112,3 +112,5 @@ Without Mod Menu you can also access the config by running the command `/improve
 
 Check out [Configuration](https://github.com/agent-LuluDodo/ImproveMyMenus/wiki/Configuration),
 if you are interested in detailed explanations of every config option. 
+
+[![© agent_LuluDodo](README-images/Footer.png)](https://github.com/agent-LuluDodo/ImproveMyMenus?tab=MIT-1-ov-file)
