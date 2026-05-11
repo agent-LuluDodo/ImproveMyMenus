@@ -1,5 +1,7 @@
 [![Download on Modrinth](README-images/Download%20on%20Modrinth.png)](https://modrinth.com/mod/improvemymenus)
 
+---
+
 ![Improve My Menus Header](README-images/Header.png)
 
 A collection of small improvements to various aspects of Minecraft's menus.
