@@ -1,4 +1,4 @@
-[![Download on Modrinth](README-images/Download%20on%20Modrinth.png)](https://modrinth.com/mod/improvemymenus)
+[![Download on Modrinth](README-images/Download%20on%20Modrinth.png)](https://modrinth.com/mod/improvemymenus#download)
 
 ---
 
