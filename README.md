@@ -28,7 +28,7 @@ or alternatively you can create a [Bug Report]() if something's broken.
 
 ### Indicators
 
-These allow you to instantly gauge the amount of possible options and 
+These allow you to instantly gauge the number of possible options and 
 additionally provide a way to quickly navigate when pressed.
 
 ![A screenshot of the "World Type" cycle button with indicators visible.](README-images/Indicators.png)
@@ -86,7 +86,7 @@ restores the previous screen upon closing the settings.
 
 ## High Contrast Support
 
-Built-in support for the "High Contrast" vanilla resource pack.
+Built-in support for the "High Contrast" Vanilla resource pack.
 
 ![A screenshot of the "Video Settings" screen with the "High Contrast" resource pack enabled.](README-images/High%20Contrast%20Video%20Settings.png)
 
@@ -153,8 +153,8 @@ Default: `ON`<br>
 Vanilla: `OFF`
 
 One of the few bigger visual changes of this mod.
-My intention behind this feature was to make gauging the amount of available options easier and 
-to provide an easier method to cycle through large amounts of values quickly.
+My intention behind this feature was to make gauging the number of available options easier and 
+to provide an easier method to cycle through large numbers of values quickly.
 
 Every indicator corresponds to one value of the button, 
 and the currently selected one will be highlighted.
@@ -217,7 +217,7 @@ Assigns a deterministic random color to every possible value, helping differenti
 Default: `5`<br>
 Vanilla: `0`
 
-The maximum amount of indicators to show.
+The maximum number of indicators to show.
 Settings this to `0` will completely disable slider indicators.
 
 ### Highlights
@@ -234,9 +234,9 @@ Vanilla: `Area`
 
 Spacing determines the position of discrete values inside a slider.
 
-Visual spacing leaves equal space between consecutive values.<br>
-Area spacing assigns each value an area of equal size, leading to bigger spaces at the edge of a slider.<br>
-Mixed spacing uses area spacing to detect clicks, but visual spacing to show values.
+"Visual" spacing leaves equal space between consecutive values.<br>
+"Area" spacing assigns each value an area of equal size, leading to bigger spaces at the edge of a slider.<br>
+"Mixed" spacing uses area spacing to detect clicks, but visual spacing to show values.
 
 ### Enum Spacing
 
@@ -245,7 +245,7 @@ Vanilla: `Mixed`
 
 The same as spacing but for non-number values.
 
-The only slider with enum spacing in vanilla is the "Profile" slider in "Video Settings".
+The only slider with enum spacing in Vanilla is the "Profile" slider in "Video Settings".
 
 ### Snap
 
@@ -257,8 +257,8 @@ Determines at which moment in time a slider should snap to the nearest discrete 
 The Vanilla behavior for some sliders is very weird, they snap after not moving for 600ms, 
 even if you are still holding them. Otherwise, it's the same as On Release.
 
-On Release snaps as the name says, upon releasing the slider.<br>
-While Dragging snaps, while you are still dragging the slider, jumping between values.
+"On Release" snaps as the name says, upon releasing the slider.<br>
+"While Dragging" snaps, while you are still dragging the slider, jumping between values.
 
 ### Force Cursor
 
@@ -278,9 +278,9 @@ Vanilla: `Only Parent`
 
 Changes which elements have priority when scrolling.
 
-Vanilla only scrolls the parent element (e.g. a list), even if that list can't be scrolled.<br>
-Prefer Parent scrolls the child element (e.g. a button) if the list can't be scrolled.<br>
-Prefer Children also scrolls the child element if the list can be scrolled.
+"Vanilla" only scrolls the parent element (e.g. a list), even if that list can't be scrolled.<br>
+"Prefer Parent" scrolls the child element (e.g. a button) if the list can't be scrolled.<br>
+"Prefer Children" also scrolls the child element if the list can be scrolled.
 
 ### Force Cursor
 
@@ -301,9 +301,9 @@ While coding this mod, I discovered that you can zoom inside the Video Settings 
 by pressing control and scrolling.
 I decided to add a bit of customization to this behavior.
 
-Nowhere, disables this zooming behavior. 
-In Video Settings only allows it in the named screen and
-Everywhere allows it everywhere.
+"Nowhere", disables this zooming behavior. 
+"In Video Settings" only allows it in the named screen and
+"Everywhere" allows it everywhere.
 
 ## Unblur Video Settings
 
@@ -319,8 +319,8 @@ without having to close and reopen the settings.
 Default: `ON`<br>
 Vanilla: `OFF`
 
-I really don't like the vanilla debug options, the tri-state toggle it uses feels very unintuitive, at least for me.
-So I decided to redesign this toggle, additionally I added translations for all vanilla options, 
+I really don't like the Vanilla "Debug Options", the tri-state toggle it uses feels very unintuitive, at least for me.
+So I decided to redesign this toggle, additionally I added translations for all Vanilla options, 
 since they look better than raw ids.
 
 Another thing I noticed while testing my changes is that closing the "Debug Options" screen always returns to
