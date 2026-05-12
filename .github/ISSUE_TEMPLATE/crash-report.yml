@@ -7,6 +7,13 @@ body:
   - type: markdown
     attributes:
       value: '# System'
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      placeholder: e.g. Windows 11
+    validations:
+      required: true
   - type: dropdown
     id: minecraft-version
     attributes:
@@ -15,20 +22,15 @@ body:
         - '26.1.2'
     validations:
       required: true
-  - type: input
-    id: os
-    attributes:
-      label: Operating System
-      placeholder: e.g. Windows 11
-    validations:
-      required: true
   - type: checkboxes
     id: up-to-date
     attributes:
       label: Checkboxes
       options:
         - label: Yes, my version of ImproveMyMenus is up-to-date
+          required: true
         - label: No, this crash does not happen without ImproveMyMenus
+          required: true
   - type: markdown
     attributes:
       value: '# Information'
