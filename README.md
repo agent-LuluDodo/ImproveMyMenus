@@ -43,7 +43,7 @@ Helps you to immediately recognize the value of an On/Off button.
 
 Transforms buttons that only contain the word ON or OFF into simpler, more recognizable switches.
 
-![A screenshot of a switch in the on position](README-images/Switch.png)
+![A screenshot of a switch in the on position.](README-images/Switch.png)
 
 ## Sliders
 
