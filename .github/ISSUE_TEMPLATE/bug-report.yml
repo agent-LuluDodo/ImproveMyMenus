@@ -15,12 +15,6 @@ body:
         - '26.1.2'
     validations:
       required: true
-  - type: checkbox
-    id: up-to-date
-    attributes:
-      label: Yes, my version of ImproveMyMenus is up-to-date
-    validations:
-      required: true
   - type: input
     id: os
     attributes:
@@ -28,6 +22,13 @@ body:
       placeholder: e.g. Windows 11
     validations:
       required: true
+  - type: checkboxes
+    id: up-to-date
+    attributes:
+      label: Checkboxes
+      options:
+        - label: Yes, my version of ImproveMyMenus is up-to-date
+        - label: No, this bug is not present without ImproveMyMenus
   - type: markdown
     attributes:
       value: '# Information'
@@ -47,5 +48,5 @@ body:
         2. Click on '....'
         3. Scroll down to '....'
         4. See error
-      validations:
-        required: true
+    validations:
+      required: true
