@@ -1,0 +1,51 @@
+name: Crash Report
+description: Report a crash
+title: '[Crash] '
+labels:
+  - crash
+body:
+  - type: markdown
+    attributes:
+      value: '# System'
+  - type: dropdown
+    id: minecraft-version
+    attributes:
+      label: Minecraft Version
+      options:
+        - '26.1.2'
+    validations:
+      required: true
+  - type: checkbox
+    id: up-to-date
+    attributes:
+      label: Yes, my version of ImproveMyMenus is up-to-date
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      placeholder: e.g. Windows 11
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: '# Information'
+  - type: input
+    id: log
+    attributes:
+      label: Minecraft Log
+      description: Upload the `lastest.log` file to a site like [mclo.gs](https://mclo.gs/) and put the link here
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How to reproduce the crash
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true

@@ -1,0 +1,16 @@
+name: Feature Request
+description: Suggest a new feature for ImproveMyMenus
+title: '[Feature] '
+labels:
+  - feature
+body:
+  - type: textarea
+    id: why
+    attributes:
+      label: Why?
+      description: Why would this feature be useful?
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the feature
