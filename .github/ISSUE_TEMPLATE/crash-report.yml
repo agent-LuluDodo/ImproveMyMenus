@@ -38,7 +38,7 @@ body:
     id: log
     attributes:
       label: Minecraft Log
-      description: Upload the `lastest.log` file to a site like [mclo.gs](https://mclo.gs/) and put the link here
+      description: Upload the `latest.log` file to a site like [mclo.gs](https://mclo.gs/) and put the link here
     validations:
       required: true
   - type: textarea
