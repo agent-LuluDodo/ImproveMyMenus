@@ -21,8 +21,8 @@ Finally, I also added the ability to customize some normally hard-coded key bind
 
 This mod contains a variety of features split into different categories.
 
-Feel free to create a [Feature Request]() if you want to request something new,
-or alternatively you can create a [Bug Report]() if something's broken.
+Feel free to create a [Feature Request](https://github.com/agent-LuluDodo/ImproveMyMenus/issues/new?template=feature-request.yml) if you want to request something new,
+or alternatively you can create a [Bug Report](https://github.com/agent-LuluDodo/ImproveMyMenus/issues/new?template=bug-report.yml) if something's broken.
 
 ## Cycle Button
 
