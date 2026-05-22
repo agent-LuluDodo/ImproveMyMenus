@@ -98,7 +98,7 @@
   "improvemymenus.options.other.fix_onboarding_panorama_spinning": "Fix Onboarding Panorama Spinning",
   "improvemymenus.options.other.fix_onboarding_panorama_spinning.tooltip": "Prevents the panorama from spinning wile onboarding inside of the Music & Sounds menu.\nFixes MC-308112",
   "improvemymenus.options.other.independent_animations": "Independent Animations",
-  "improvemymenus.options.other.independent_animations.tooltip": "Untied the advancement screen fade from the frame rate.\nFixes MC-307860",
+  "improvemymenus.options.other.independent_animations.tooltip": "Unties the advancement screen fade from the frame rate.\nFixes MC-307860",
   "improvemymenus.debug.options.biome": "Biome",
   "improvemymenus.debug.options.chunk_generation_stats": "Chunk Generation Statistics",
   "improvemymenus.debug.options.chunk_render_stats": "Chunk Rendering Statistics",
