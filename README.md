@@ -76,12 +76,6 @@ Vanilla leaves big gaps at the edges of sliders, which can act unintuitively.
 
 The cursor doesn't lose its arrow shape when dragging a slider or scrollbar outside its area.
 
-## Improved Social Interactions
-
-Replaced buttons emulating tabs with proper tabs.
-
-![A screenshot of the improved "Social Interactions" screen.](README-images/Improved%20Social%20Interactions.png)
-
 ## Improved Debug Options
 
 Added translations for debug options, 
@@ -89,6 +83,12 @@ redesigned the tri-state toggle and
 restores the previous screen upon closing the settings.
 
 ![A screenshot of the improved "Debug Options" screen.](README-images/Improved%20Debug%20Options.png)
+
+## Improved Social Interactions
+
+Replaced buttons emulating tabs with proper tabs.
+
+![A screenshot of the improved "Social Interactions" screen.](README-images/Improved%20Social%20Interactions.png)
 
 ## High Contrast Support
 
