@@ -99,6 +99,16 @@ public abstract class AbstractButtonMixin implements AbstractButtonWithType {
             IdentifierUtil.id("debug_option/right_pressed_highlighted")
     );
 
+    @Unique
+    private static final WidgetSprites IMPROVEMYMENUS$SOCIAL_INTERACTIONS_TAB = new WidgetSprites(
+            IdentifierUtil.id("social_interactions/tab")
+    );
+
+    @Unique
+    private static final WidgetSprites IMPROVEMYMENUS$SOCIAL_INTERACTIONS_TAB_SELECTED = new WidgetSprites(
+            IdentifierUtil.id("social_interactions/tab_selected")
+    );
+
     @SuppressWarnings("ConstantValue")
     @ModifyReceiver(
             method = "extractDefaultSprite",
@@ -109,21 +119,62 @@ public abstract class AbstractButtonMixin implements AbstractButtonWithType {
     )
     private WidgetSprites improvemymenus$modifySprite(WidgetSprites original, boolean enabled, boolean focused) {
         boolean boolValue = ((Object) this instanceof CycleButton<?> cb) && cb.getValue() instanceof Boolean bool && bool;
+
         if (Config.CycleButton.SWITCHES && improvemymenus$type == Type.ON_OFF) {
             return boolValue ? IMPROVEMYMENUS$ON_BUTTON : IMPROVEMYMENUS$OFF_BUTTON;
-        } else if (Config.Other.IMPROVE_DEBUG_OPTIONS) {
-            return switch (improvemymenus$type) {
-                case DEBUG_OPTION_LEFT -> boolValue ?
-                        IMPROVEMYMENUS$DEBUG_OPTION_LEFT_PRESSED : IMPROVEMYMENUS$DEBUG_OPTION_LEFT;
-                case DEBUG_OPTION_CENTER -> boolValue ?
-                        IMPROVEMYMENUS$DEBUG_OPTION_CENTER_PRESSED : IMPROVEMYMENUS$DEBUG_OPTION_CENTER;
-                case DEBUG_OPTION_RIGHT -> boolValue ?
-                        IMPROVEMYMENUS$DEBUG_OPTION_RIGHT_PRESSED : IMPROVEMYMENUS$DEBUG_OPTION_RIGHT;
-                default -> original;
-            };
-        } else {
-            return original;
         }
+
+        if (Config.Other.IMPROVE_SOCIAL_INTERACTIONS) {
+            switch (improvemymenus$type) {
+                case SOCIAL_INTERACTIONS_TAB -> {
+                    return IMPROVEMYMENUS$SOCIAL_INTERACTIONS_TAB;
+                }
+                case SOCIAL_INTERACTIONS_TAB_SELECTED -> {
+                    return IMPROVEMYMENUS$SOCIAL_INTERACTIONS_TAB_SELECTED;
+                }
+            }
+        }
+
+        if (Config.Other.IMPROVE_DEBUG_OPTIONS) {
+            switch (improvemymenus$type) {
+                case DEBUG_OPTION_LEFT -> {
+                    return boolValue ?
+                            IMPROVEMYMENUS$DEBUG_OPTION_LEFT_PRESSED :
+                            IMPROVEMYMENUS$DEBUG_OPTION_LEFT;
+                }
+                case DEBUG_OPTION_CENTER -> {
+                    return boolValue ?
+                            IMPROVEMYMENUS$DEBUG_OPTION_CENTER_PRESSED :
+                            IMPROVEMYMENUS$DEBUG_OPTION_CENTER;
+                }
+                case DEBUG_OPTION_RIGHT -> {
+                    return boolValue ?
+                            IMPROVEMYMENUS$DEBUG_OPTION_RIGHT_PRESSED :
+                            IMPROVEMYMENUS$DEBUG_OPTION_RIGHT;
+                }
+            }
+        }
+
+        return original;
+    }
+
+    @ModifyArg(
+            method = "extractDefaultSprite",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIIII)V"
+            ),
+            index = 5
+    )
+    private int improvemymenus$modifyHeight(int original) {
+        if (Config.Other.IMPROVE_SOCIAL_INTERACTIONS) {
+            switch (improvemymenus$type) {
+                case SOCIAL_INTERACTIONS_TAB, SOCIAL_INTERACTIONS_TAB_SELECTED -> {
+                    return original + 2;
+                }
+            }
+        }
+        return original;
     }
 
     @Override

@@ -7,6 +7,7 @@ import de.luludodo.improvemymenus.mixinInterface.AbstractButtonWithType;
 import de.luludodo.improvemymenus.mixinInterface.AbstractWidgetWithTooltipGetter;
 import de.luludodo.improvemymenus.mixinInterface.CycleButtonWithIndicators;
 import de.luludodo.improvemymenus.util.DebugOptionsScreenUtil;
+import de.luludodo.improvemymenus.util.SocialInteractionScreenUtil;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
@@ -72,14 +73,41 @@ public abstract class AbstractWidgetMixin implements AbstractWidgetWithTooltipGe
                     target = "Lnet/minecraft/client/gui/components/AbstractWidget;getX()I"
             )
     )
-    private int improvemymenus$adjustText(int original) {
+    private int improvemymenus$adjustTextX(int original) {
         if (this instanceof AbstractButtonWithType buttonWithType) {
-            return switch (buttonWithType.improvemymenus$getType()) {
-                case DEBUG_OPTION_LEFT -> original + DebugOptionsScreenUtil.leftAdjustment();
-                case DEBUG_OPTION_CENTER -> original + DebugOptionsScreenUtil.centerAdjustment();
-                case DEBUG_OPTION_RIGHT -> original + DebugOptionsScreenUtil.rightAdjustment();
-                default -> original;
-            };
+            if (Config.Other.IMPROVE_DEBUG_OPTIONS) {
+                switch (buttonWithType.improvemymenus$getType()) {
+                    case DEBUG_OPTION_LEFT -> {
+                        return original + DebugOptionsScreenUtil.leftAdjustment();
+                    }
+                    case DEBUG_OPTION_CENTER -> {
+                        return original + DebugOptionsScreenUtil.centerAdjustment();
+                    }
+                    case DEBUG_OPTION_RIGHT -> {
+                        return original + DebugOptionsScreenUtil.rightAdjustment();
+                    }
+                }
+            }
+        }
+        return original;
+    }
+
+    @ModifyExpressionValue(
+            method = "extractScrollingStringOverContents",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/components/AbstractWidget;getY()I"
+            )
+    )
+    private int improvemymenus$adjustTextY(int original) {
+        if (this instanceof AbstractButtonWithType buttonWithType) {
+            if (Config.Other.IMPROVE_SOCIAL_INTERACTIONS) {
+                switch (buttonWithType.improvemymenus$getType()) {
+                    case SOCIAL_INTERACTIONS_TAB, SOCIAL_INTERACTIONS_TAB_SELECTED -> {
+                        return original + SocialInteractionScreenUtil.downAdjustment();
+                    }
+                }
+            }
         }
         return original;
     }

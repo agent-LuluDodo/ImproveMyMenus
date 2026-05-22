@@ -10,3 +10,5 @@ accessible field net/minecraft/client/OptionInstance onValueUpdate Ljava/util/fu
 accessible field net/minecraft/client/gui/screens/debug/DebugOptionsScreen ENABLED_TEXT Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/screens/debug/DebugOptionsScreen IN_OVERLAY_TEXT Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/screens/debug/DebugOptionsScreen DISABLED_TEXT Lnet/minecraft/network/chat/Component;
+accessible field net/minecraft/client/gui/screens/options/OptionsSubScreen lastScreen Lnet/minecraft/client/gui/screens/Screen;
+accessible field net/minecraft/client/gui/components/TextCursorUtils CURSOR_BLINK_INTERVAL_MS I

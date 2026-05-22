@@ -2,6 +2,7 @@ package de.luludodo.improvemymenus;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import de.luludodo.improvemymenus.config.Config;
+import de.luludodo.improvemymenus.util.ScheduleUtil;
 import de.luludodo.improvemymenus.util.TextAdjustments;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -24,5 +25,6 @@ public class ImproveMyMenus implements ClientModInitializer {
         }
 
         TextAdjustments.registerReloadListener();
+        ScheduleUtil.init();
     }
 }

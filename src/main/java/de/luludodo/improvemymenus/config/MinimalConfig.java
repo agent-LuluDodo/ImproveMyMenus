@@ -171,15 +171,7 @@ public class MinimalConfig {
 
     private sealed interface Entry permits Action, Option {}
 
-    private record Action(String name, Button button, String tooltipId, Method method) implements Entry {
-        private void run() {
-            try {
-                method.invoke(null);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new IllegalStateException("Could not run method '" + method.getName() + "'", e);
-            }
-        }
-    }
+    private record Action(String name, Button button, String tooltipId, Method method) implements Entry { }
 
     private record Option(String name, Class<?> type, OptionInstance<?> instance, Object defaultValue) implements Entry {
         private void set(Object value) {
@@ -367,7 +359,8 @@ public class MinimalConfig {
                     default -> throw new IllegalStateException("Unknown value type: " + value.getClass());
                 }
             }
-            result.add(category.name, categoryJson);
+            if (!categoryJson.isEmpty())
+                result.add(category.name, categoryJson);
         }
         return GSON.toJson(result);
     }
@@ -404,7 +397,7 @@ public class MinimalConfig {
                         }
 
                         option.set(optionJson.getAsInt());
-                    } else if (option.type instanceof Class<?>) {
+                    } else if (option.type.isEnum()) {
                         if (!optionJson.isString()) {
                             hasMissingConfigValue = missingConfigValue(option);
                             continue;

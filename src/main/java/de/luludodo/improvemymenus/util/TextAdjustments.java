@@ -27,12 +27,15 @@ public class TextAdjustments {
     }
 
     public static final Identifier DEBUG_OPTION = id("debug_option");
+    public static final Identifier SOCIAL_INTERACTIONS = id("social_interactions");
 
     public static DebugOptionAdjustment DEBUG_OPTION_ADJUSTMENT;
+    public static SocialInteractionsAdjustment SOCIAL_INTERACTIONS_ADJUSTMENT;
 
     private static final Logger LOG = LoggerFactory.getLogger(Globals.MOD_NAME + "/TextAdjustments");
 
     public record DebugOptionAdjustment(int left, int center, int right) {}
+    public record SocialInteractionsAdjustment(int down) {}
 
     private static class ReloadListener implements ResourceManagerReloadListener {
         @Override
@@ -44,6 +47,11 @@ public class TextAdjustments {
                 int right = json.get("right").getAsInt();
                 return new DebugOptionAdjustment(left, center, right);
             }, () -> new DebugOptionAdjustment(0, 0, 0));
+            SOCIAL_INTERACTIONS_ADJUSTMENT = parseJson(resourceManager, SOCIAL_INTERACTIONS, jsonElement -> {
+                JsonObject json = jsonElement.getAsJsonObject();
+                int down = json.get("down").getAsInt();
+                return new SocialInteractionsAdjustment(down);
+            }, () -> new SocialInteractionsAdjustment(0));
         }
 
         private static <T> T parseJson(ResourceManager resourceManager, Identifier id, Function<JsonElement, T> consumer, Supplier<T> fallback) {

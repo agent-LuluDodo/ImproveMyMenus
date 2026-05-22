@@ -36,12 +36,22 @@ public class Config extends MinimalConfig {
             Slider.SNAP = Slider.SnapTiming.ON_RELEASE;
             Slider.FORCE_CURSOR = true;
 
+            EditBox.SOLID_CURSOR = EditBox.SolidCursor.WHILE_TYPING;
+            EditBox.BLINK_INTERVAL = 300;
+            EditBox.CONSISTENT_HIGHLIGHTING = true;
+
             List.SCROLL_BEHAVIOUR = List.ScrollBehaviour.PREFER_PARENT;
+            List.SCROLLBAR_ON_CLICK = List.ScrollbarOnClick.DRAG;
             List.FORCE_CURSOR = true;
+            List.ACCURATE_HOVERING = true;
+            List.SUPPORT_PAGE_KEYS = false;
 
             Other.ZOOM = Other.ZoomOptions.VIDEO_SETTINGS;
             Other.UNBLUR_VIDEO_SETTINGS = false;
             Other.IMPROVE_DEBUG_OPTIONS = false;
+            Other.IMPROVE_SOCIAL_INTERACTIONS = false;
+            Other.FIX_ONBOARDING_PANORAMA_SPINNING = true;
+            Other.INDEPENDENT_ANIMATIONS = true;
 
             INSTANCE.refresh();
         }
@@ -65,12 +75,22 @@ public class Config extends MinimalConfig {
             Slider.SNAP = Slider.SnapTiming.VANILLA;
             Slider.FORCE_CURSOR = false;
 
+            EditBox.SOLID_CURSOR = EditBox.SolidCursor.NEVER;
+            EditBox.BLINK_INTERVAL = 300;
+            EditBox.CONSISTENT_HIGHLIGHTING = false;
+
             List.SCROLL_BEHAVIOUR = List.ScrollBehaviour.ONLY_PARENT;
+            List.SCROLLBAR_ON_CLICK = List.ScrollbarOnClick.VANILLA;
             List.FORCE_CURSOR = false;
+            List.ACCURATE_HOVERING = false;
+            List.SUPPORT_PAGE_KEYS = false;
 
             Other.ZOOM = Other.ZoomOptions.VIDEO_SETTINGS;
             Other.UNBLUR_VIDEO_SETTINGS = false;
             Other.IMPROVE_DEBUG_OPTIONS = false;
+            Other.IMPROVE_SOCIAL_INTERACTIONS = false;
+            Other.FIX_ONBOARDING_PANORAMA_SPINNING = false;
+            Other.INDEPENDENT_ANIMATIONS = false;
 
             INSTANCE.refresh();
         }
@@ -123,6 +143,20 @@ public class Config extends MinimalConfig {
         public static boolean FORCE_CURSOR = true;
     }
 
+    public static class EditBox {
+        public static SolidCursor SOLID_CURSOR = SolidCursor.WHILE_TYPING;
+        public enum SolidCursor {
+            NEVER,
+            WHILE_TYPING,
+            ALWAYS
+        }
+
+        @IntSlider(min = 1, max = 1000)
+        public static int BLINK_INTERVAL = 300;
+
+        public static boolean CONSISTENT_HIGHLIGHTING = true;
+    }
+
     public static class List {
         public static ScrollBehaviour SCROLL_BEHAVIOUR = ScrollBehaviour.PREFER_PARENT;
         public enum ScrollBehaviour {
@@ -131,7 +165,22 @@ public class Config extends MinimalConfig {
             PREFER_CHILDREN
         }
 
+        public static ScrollbarOnClick SCROLLBAR_ON_CLICK = ScrollbarOnClick.JUMP;
+        public enum ScrollbarOnClick {
+            VANILLA,
+            DRAG,
+            PAGE,
+            JUMP
+        }
+
         public static boolean FORCE_CURSOR = true;
+
+        public static boolean ACCURATE_HOVERING = true;
+
+        public static boolean SUPPORT_PAGE_KEYS = true;
+
+        @IntSlider(min = 0, max = 25)
+        public static int PAGE_OVERLAP = 10;
     }
 
     public static class Other {
@@ -145,6 +194,14 @@ public class Config extends MinimalConfig {
         public static boolean UNBLUR_VIDEO_SETTINGS = true;
 
         public static boolean IMPROVE_DEBUG_OPTIONS = true;
+
+        public static boolean IMPROVE_SOCIAL_INTERACTIONS = true;
+
+        // Fixes MC-308112
+        public static boolean FIX_ONBOARDING_PANORAMA_SPINNING = true;
+
+        // Fixes MC-307860
+        public static boolean INDEPENDENT_ANIMATIONS = true;
     }
 
     public enum Modifier {

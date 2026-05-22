@@ -16,7 +16,9 @@ public interface AbstractButtonWithType {
         NORMAL,
         DEBUG_OPTION_LEFT,
         DEBUG_OPTION_CENTER,
-        DEBUG_OPTION_RIGHT
+        DEBUG_OPTION_RIGHT,
+        SOCIAL_INTERACTIONS_TAB,
+        SOCIAL_INTERACTIONS_TAB_SELECTED,
     }
 
     void improvemymenus$setType(Type type);
