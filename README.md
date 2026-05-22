@@ -76,6 +76,12 @@ Vanilla leaves big gaps at the edges of sliders, which can act unintuitively.
 
 The cursor doesn't lose its arrow shape when dragging a slider or scrollbar outside its area.
 
+## Improved Social Interactions
+
+Replaced buttons emulating tabs with proper tabs.
+
+![A screenshot of the improved "Social Interactions" screen.](README-images/Improved%20Social%20Interactions.png)
+
 ## Improved Debug Options
 
 Added translations for debug options, 
@@ -99,6 +105,8 @@ Furthermore, tooltips are supported.
 
 Check out the [Resource Packs](https://github.com/agent-LuluDodo/ImproveMyMenus/wiki/Resource-Packs) for more information,
 on how to customize ImproveMyMenus.
+
+## And a lot more..
 
 # Configuration
 
