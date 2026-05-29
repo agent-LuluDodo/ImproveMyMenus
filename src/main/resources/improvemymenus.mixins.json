@@ -20,6 +20,7 @@
     "DebugOptionsScreenOptionEntryMixin",
     "DebugOptionsScreenOptionListMixin",
     "EditBoxMixin",
+    "FramerateLimitTrackerMixin",
     "GuiGraphicsExtractorMixin",
     "KeyboardHandlerMixin",
     "OptionInstanceIntRangeBaseMixin",

@@ -3,6 +3,7 @@ package de.luludodo.improvemymenus.config;
 import com.google.common.io.Files;
 import com.google.gson.*;
 import com.mojang.serialization.Codec;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
@@ -14,6 +15,7 @@ import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
@@ -188,7 +190,8 @@ public class MinimalConfig {
 
     private final Category[] categories;
 
-    private  final Logger logger;
+    private final Logger logger;
+    private final String name;
     private final File old;
     private final File file;
     private final String title;
@@ -205,6 +208,7 @@ public class MinimalConfig {
         this.file = configDir.resolve(modId + ".json").toFile();
 
         this.logger = LoggerFactory.getLogger(id.name() + "/MinimalConfig");
+        this.name = "[" + id.name() + "] ";
         this.title = modId + ".options";
 
         List<Category> categories = new ArrayList<>();
@@ -315,7 +319,7 @@ public class MinimalConfig {
         try (BufferedReader reader = Files.newReader(load, StandardCharsets.UTF_8)) {
             json = reader.readAllAsString();
         } catch (IOException e) {
-            this.logger.error("Could not load config", e);
+            this.logger.error("[{}] Could not load config", name, e);
             return;
         }
 
@@ -337,7 +341,7 @@ public class MinimalConfig {
 
             old.delete();
         } catch (IOException e) {
-            this.logger.error("Could not save config", e);
+            this.logger.error("[{}] Could not save config", name, e);
 
             try {
                 Files.move(old, file);
@@ -372,7 +376,7 @@ public class MinimalConfig {
             for (Category category : categories) {
                 JsonElement categoryJsonElement = json.get(category.name);
                 if (!(categoryJsonElement instanceof JsonObject categoryJson)) {
-                    this.logger.warn("Config is missing value for category '{}'", category.name);
+                    this.logger.warn("[{}] Config is missing value for category '{}'", name, category.name);
                     continue;
                 }
 
@@ -418,7 +422,7 @@ public class MinimalConfig {
             }
             return hasMissingConfigValue;
         } catch (RuntimeException e) {
-            this.logger.error("Could not parse config", e);
+            this.logger.error("[{}] Could not parse config", name, e);
             return true;
         }
     }
@@ -429,7 +433,7 @@ public class MinimalConfig {
     }
 
     private boolean missingConfigValue(Option option) {
-        this.logger.warn("Config is missing value for option '{}'", option.name);
+        this.logger.warn("[{}] Config is missing value for option '{}'", name, option.name);
         return true;
     }
 
@@ -552,15 +556,30 @@ public class MinimalConfig {
     private static OptionInstance<Integer> intOption(String option, Field field, Class<?> parent) throws IllegalAccessException {
         IntSlider slider = field.getAnnotation(IntSlider.class);
         if (slider == null) throw new IllegalStateException("Missing @IntSlider annotation for int value!");
-        String suffixId = option + ".suffix";
         return new OptionInstance<>(
                 option,
                 intTooltipSupplier(option),
-                (caption, value) -> Options.genericValueLabel(caption, Component.literal(Integer.toString(value)).append(I18n.exists(suffixId) ? Component.translatable(suffixId) : Component.empty())),
+                intToString(option),
                 new OptionInstance.IntRange(slider.min(), slider.max()),
                 field.getInt(null),
                 fieldSetter(option, field, parent)
         );
+    }
+
+    private static OptionInstance.CaptionBasedToString<Integer> intToString(String option) {
+        Map<Integer, Component> cache = new Object2ObjectOpenHashMap<>();
+        return (caption, value) -> Options.genericValueLabel(caption, cache.computeIfAbsent(value, i -> {
+            MutableComponent result;
+            if (I18n.exists(option + "." + i)) {
+                result = Component.translatable(option + "." + i);
+            } else {
+                result = Component.literal(i.toString());
+                if (I18n.exists(option + ".suffix")) {
+                    result.append(Component.translatable(option + ".suffix"));
+                }
+            }
+            return result;
+        }));
     }
 
     private static <E extends Enum<E>> OptionInstance<?> enumOption(String prefix, String option, Field field, Class<?> clazz, Class<?> parent) throws IllegalAccessException{

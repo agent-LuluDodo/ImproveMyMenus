@@ -1,4 +1,4 @@
-package de.luludodo.improvemymenus.modmenu;
+package de.luludodo.improvemymenus.compatibility;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

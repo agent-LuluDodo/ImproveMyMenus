@@ -60,17 +60,17 @@ public class TextAdjustments {
                 try (BufferedReader reader = resource.get().openAsReader()) {
                     return consumer.apply(JsonParser.parseReader(reader));
                 } catch (IOException | RuntimeException e) {
-                    LOG.error("Error reading text adjustment '{}'", DEBUG_OPTION, e);
+                    LOG.error("[{}] Error reading text adjustment '{}'", Globals.MOD_NAME, DEBUG_OPTION, e);
                     return fallback.get();
                 }
             } else {
-                LOG.error("Couldn't find text adjustment '{}'", id);
+                LOG.error("[{}] Couldn't find text adjustment '{}'", Globals.MOD_NAME, id);
                 return fallback.get();
             }
         }
     }
 
-    public static void registerReloadListener() {
+    public static void init() {
         ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(IDENTIFIER, new ReloadListener());
     }
 }

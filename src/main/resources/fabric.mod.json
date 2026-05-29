@@ -19,7 +19,7 @@
       "de.luludodo.improvemymenus.ImproveMyMenus"
     ],
     "modmenu": [
-      "de.luludodo.improvemymenus.modmenu.ImproveMyMenusModMenuIntegration"
+      "de.luludodo.improvemymenus.compatibility.ImproveMyMenusModMenuIntegration"
     ]
   },
   "mixins": [

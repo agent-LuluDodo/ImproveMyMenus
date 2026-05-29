@@ -39,6 +39,7 @@
   "improvemymenus.options.cycle_button.random_colors": "Random Colors",
   "improvemymenus.options.slider": "Sliders",
   "improvemymenus.options.slider.max_indicators": "Max Indicators",
+  "improvemymenus.options.slider.max_indicators.0": "OFF",
   "improvemymenus.options.slider.highlight": "Highlight",
   "improvemymenus.options.slider.highlight.tooltip": "If the currently hovered separator should be highlighted.",
   "improvemymenus.options.slider.snap": "Snap",
@@ -99,6 +100,9 @@
   "improvemymenus.options.other.fix_onboarding_panorama_spinning.tooltip": "Prevents the panorama from spinning wile onboarding inside of the Music & Sounds menu.\nFixes MC-308112",
   "improvemymenus.options.other.independent_animations": "Independent Animations",
   "improvemymenus.options.other.independent_animations.tooltip": "Unties the advancement screen fade from the frame rate.\nFixes MC-307860",
+  "improvemymenus.options.other.menu_fps": "Menu Framerate",
+  "improvemymenus.options.other.menu_fps.suffix": " fps",
+  "improvemymenus.options.other.menu_fps.260": "Unlimited",
   "improvemymenus.debug.options.biome": "Biome",
   "improvemymenus.debug.options.chunk_generation_stats": "Chunk Generation Statistics",
   "improvemymenus.debug.options.chunk_render_stats": "Chunk Rendering Statistics",
@@ -146,5 +150,8 @@
   "improvemymenus.debug.options.visualize_solid_faces": "Solid Faces",
   "improvemymenus.debug.options.visualize_water_levels": "Water Levels",
   "improvemymenus.debug.options.tooltip.default": "Default: %s",
+  "improvemymenus.sodium.debug.options.debug_full": "Sodium (Full)",
+  "improvemymenus.sodium.debug.options.debug_reduced": "Sodium (Reduced)",
+  "improvemymenus.sodium.debug.options.fps_percentiles": "Fps Percentiles",
   "improvemymenus.dropdown.title": "Dropdown"
 }

@@ -52,6 +52,7 @@ public class Config extends MinimalConfig {
             Other.IMPROVE_SOCIAL_INTERACTIONS = false;
             Other.FIX_ONBOARDING_PANORAMA_SPINNING = true;
             Other.INDEPENDENT_ANIMATIONS = true;
+            Other.MENU_FPS = 60;
 
             INSTANCE.refresh();
         }
@@ -91,6 +92,7 @@ public class Config extends MinimalConfig {
             Other.IMPROVE_SOCIAL_INTERACTIONS = false;
             Other.FIX_ONBOARDING_PANORAMA_SPINNING = false;
             Other.INDEPENDENT_ANIMATIONS = false;
+            Other.MENU_FPS = 60;
 
             INSTANCE.refresh();
         }
@@ -202,6 +204,9 @@ public class Config extends MinimalConfig {
 
         // Fixes MC-307860
         public static boolean INDEPENDENT_ANIMATIONS = true;
+
+        @IntSlider(min = 10, max = 260)
+        public static int MENU_FPS = 60;
     }
 
     public enum Modifier {

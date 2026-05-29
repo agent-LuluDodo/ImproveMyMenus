@@ -66,9 +66,6 @@ public abstract class DebugOptionsScreenOptionEntryMixin {
 
         if (!Config.Other.IMPROVE_DEBUG_OPTIONS) return;
 
-        String namespace = location.getNamespace();
-        String path = location.getPath();
-
         String translationKey = DebugOptionsScreenUtil.getTranslationKey(location);
         MutableComponent newName = Component.translatableWithFallback(translationKey, name);
 
