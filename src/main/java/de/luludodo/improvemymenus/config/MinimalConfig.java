@@ -12,7 +12,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -35,8 +35,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.text.spi.NumberFormatProvider;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.ToIntFunction;
@@ -144,7 +144,7 @@ public class MinimalConfig {
                     Action action = category.actions[i];
                     Button button = action.button;
                     button.setFocused(false);
-                    if (I18n.exists(action.tooltipId)) {
+                    if (Language.getInstance().has(action.tooltipId)) {
                         button.setTooltip(Tooltip.create(Component.translatable(action.tooltipId)));
                     }
                     widgets[i] = button;
@@ -159,7 +159,7 @@ public class MinimalConfig {
         }
 
         public void refresh() {
-            minecraft.setScreen(new Screen(lastScreen, categories, title, save));
+            minecraft.gui.setScreen(new Screen(lastScreen, categories, title, save));
         }
 
         @Override
@@ -180,7 +180,7 @@ public class MinimalConfig {
             OptionInstance<Object> objectInstance = uncheckedCast(instance);
             objectInstance.set(value);
             if (!Minecraft.getInstance().isRunning())
-                objectInstance.onValueUpdate.accept(value);
+                objectInstance.onValueUpdate.valueChanged(value);
         }
 
         private void reset() {
@@ -208,7 +208,7 @@ public class MinimalConfig {
         this.file = configDir.resolve(modId + ".json").toFile();
 
         this.logger = LoggerFactory.getLogger(id.name() + "/MinimalConfig");
-        this.name = "[" + id.name() + "] ";
+        this.name = id.name();
         this.title = modId + ".options";
 
         List<Category> categories = new ArrayList<>();
@@ -260,6 +260,17 @@ public class MinimalConfig {
                                 option,
                                 int.class,
                                 intOption(
+                                        optionId,
+                                        field,
+                                        subClass
+                                ),
+                                value
+                        ));
+                    } else if (type == float.class) {
+                        options.add(new Option(
+                                option,
+                                float.class,
+                                floatOption(
                                         optionId,
                                         field,
                                         subClass
@@ -461,6 +472,20 @@ public class MinimalConfig {
         int max();
     }
 
+    /// Required for a field of type `float`.
+    /// Provides information on the range of the slider.
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    public @interface FloatSlider {
+        /// The smallest allowed value. (inclusive)
+        float min();
+
+        /// The largest allowed value. (inclusive)
+        float max();
+
+        int precision();
+    }
+
     /// Calls the specified function when the value of this field changes.
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
@@ -486,7 +511,7 @@ public class MinimalConfig {
             }
         }
 
-        if (Minecraft.getInstance().screen instanceof Screen configScreen) {
+        if (Minecraft.getInstance().gui.screen() instanceof Screen configScreen) {
             configScreen.refresh();
         }
 
@@ -523,7 +548,7 @@ public class MinimalConfig {
             }
         }
 
-        if (Minecraft.getInstance().screen instanceof Screen configScreen) {
+        if (Minecraft.getInstance().gui.screen() instanceof Screen configScreen) {
             configScreen.refresh();
         }
 
@@ -558,23 +583,60 @@ public class MinimalConfig {
         if (slider == null) throw new IllegalStateException("Missing @IntSlider annotation for int value!");
         return new OptionInstance<>(
                 option,
-                intTooltipSupplier(option),
-                intToString(option),
+                numberTooltipSupplier(option),
+                numberToString(option, Object::toString),
                 new OptionInstance.IntRange(slider.min(), slider.max()),
                 field.getInt(null),
                 fieldSetter(option, field, parent)
         );
     }
 
-    private static OptionInstance.CaptionBasedToString<Integer> intToString(String option) {
-        Map<Integer, Component> cache = new Object2ObjectOpenHashMap<>();
+    private record FloatRange(float min, float max) implements OptionInstance.SliderableValueSet<Float> {
+        @Override
+        public double toSliderValue(@NotNull Float value) {
+            return (value - min) / (max - min);
+        }
+
+        @Override
+        public @NotNull Float fromSliderValue(double slider) {
+            return (float) ((slider * (max - min)) + min);
+        }
+
+        @Override
+        public @NotNull Optional<Float> validateValue(@NotNull Float value) {
+            return value >= min && value <= max ? Optional.of(value) : Optional.empty();
+        }
+
+        @Override
+        public @NonNull Codec<Float> codec() {
+            return Codec.floatRange(min, max);
+        }
+    }
+
+    private static OptionInstance<Float> floatOption(String option, Field field, Class<?> parent) throws IllegalAccessException {
+        FloatSlider slider = field.getAnnotation(FloatSlider.class);
+        if (slider == null) throw new IllegalStateException("Missing @FloatSlider annotation for float value!");
+        String format = "%." + slider.precision() + "f";
+        return new OptionInstance<>(
+                option,
+                numberTooltipSupplier(option),
+                numberToString(option, f -> String.format(Locale.ROOT, format, f)),
+                new FloatRange(slider.min(), slider.max()),
+                field.getFloat(null),
+                fieldSetter(option, field, parent)
+        );
+    }
+
+    private static <N extends Number> OptionInstance.CaptionBasedToString<N> numberToString(String option, Function<N, String> toString) {
+        Map<N, Component> cache = new Object2ObjectOpenHashMap<>();
         return (caption, value) -> Options.genericValueLabel(caption, cache.computeIfAbsent(value, i -> {
+            String s = toString.apply(i);
             MutableComponent result;
-            if (I18n.exists(option + "." + i)) {
-                result = Component.translatable(option + "." + i);
+            if (Language.getInstance().has(option + "." + s)) {
+                result = Component.translatable(option + "." + s);
             } else {
-                result = Component.literal(i.toString());
-                if (I18n.exists(option + ".suffix")) {
+                result = Component.literal(s);
+                if (Language.getInstance().has(option + ".suffix")) {
                     result.append(Component.translatable(option + ".suffix"));
                 }
             }
@@ -593,7 +655,7 @@ public class MinimalConfig {
         );
     }
 
-    private static <T> Consumer<T> fieldSetter(String option, Field field, Class<?> clazz) {
+    private static <T> OptionInstance.ValueUpdateListener<T> fieldSetter(String option, Field field, Class<?> clazz) {
         OnChange onChange = field.getAnnotation(OnChange.class);
         Runnable callback;
         if (onChange != null) {
@@ -690,10 +752,10 @@ public class MinimalConfig {
         return field.getName().toLowerCase(Locale.ROOT);
     }
 
-    private static <T> OptionInstance.TooltipSupplier<T> intTooltipSupplier(String option) {
+    private static <T> OptionInstance.TooltipSupplier<T> numberTooltipSupplier(String option) {
         return _ -> {
             String id = option + ".tooltip";
-            if (I18n.exists(id)) {
+            if (Language.getInstance().has(id)) {
                 return Tooltip.create(Component.translatable(id));
             } else {
                 return null;
@@ -708,11 +770,11 @@ public class MinimalConfig {
     private static <T> OptionInstance.TooltipSupplier<T> enumTooltipSupplier(String option) {
         return (value) -> {
             String id = enumValue(option, value) + ".tooltip";
-            if (I18n.exists(id)) {
+            if (Language.getInstance().has(id)) {
                 return Tooltip.create(Component.translatable(id));
             } else {
                 id = option + ".tooltip";
-                if (I18n.exists(id)) {
+                if (Language.getInstance().has(id)) {
                     return Tooltip.create(Component.translatable(id));
                 } else {
                     return null;
@@ -724,7 +786,7 @@ public class MinimalConfig {
     private static OptionInstance.CaptionBasedToString<Boolean> booleanStringifier(String option) {
         return (_, value) -> {
             String id = option + "." + (value ? "on" : "off");
-            if (I18n.exists(id)) {
+            if (Language.getInstance().has(id)) {
                 return Component.translatable(id);
             } else {
                 return value ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF;
@@ -735,11 +797,11 @@ public class MinimalConfig {
     private static OptionInstance.TooltipSupplier<Boolean> booleanTooltipSupplier(String option) {
         return (value) -> {
             String id = option + "." + (value ? "on" : "off") + ".tooltip";
-            if (I18n.exists(id)) {
+            if (Language.getInstance().has(id)) {
                 return Tooltip.create(Component.translatable(id));
             } else {
                 id = option + ".tooltip";
-                if (I18n.exists(id)) {
+                if (Language.getInstance().has(id)) {
                     return Tooltip.create(Component.translatable(id));
                 } else {
                     return null;

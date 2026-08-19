@@ -18,8 +18,9 @@ import org.spongepowered.asm.mixin.injection.Slice;
 @Mixin(KeyboardHandler.class)
 public abstract class KeyboardHandlerMixin {
     @Definition(id = "minecraft", field = "Lnet/minecraft/client/KeyboardHandler;minecraft:Lnet/minecraft/client/Minecraft;")
-    @Definition(id = "screen", field = "Lnet/minecraft/client/Minecraft;screen:Lnet/minecraft/client/gui/screens/Screen;")
-    @Expression("this.minecraft.screen != null")
+    @Definition(id = "gui", field = "Lnet/minecraft/client/Minecraft;gui:Lnet/minecraft/client/gui/Gui;")
+    @Definition(id = "screen", method = "Lnet/minecraft/client/gui/Gui;screen()Lnet/minecraft/client/gui/screens/Screen;")
+    @Expression("this.minecraft.gui.screen() != null")
     @ModifyExpressionValue(
             method = "handleDebugKeys",
             at = @At("MIXINEXTRAS:EXPRESSION")
@@ -39,13 +40,13 @@ public abstract class KeyboardHandlerMixin {
             ),
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screens/Screen;)V",
+                    target = "Lnet/minecraft/client/gui/Gui;setScreen(Lnet/minecraft/client/gui/screens/Screen;)V",
                     ordinal = 0
             )
     )
     private @Nullable Screen improvemymenus$parent(@Nullable Screen screen) {
         if (Config.Other.IMPROVE_DEBUG_OPTIONS && screen instanceof DebugOptionsScreen && screen instanceof ScreenWithParent screenWithParent) {
-            screenWithParent.improvemymenus$setParent(Minecraft.getInstance().screen);
+            screenWithParent.improvemymenus$setParent(Minecraft.getInstance().gui.screen());
         }
         return screen;
     }

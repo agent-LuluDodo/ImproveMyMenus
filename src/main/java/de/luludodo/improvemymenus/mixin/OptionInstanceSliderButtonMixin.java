@@ -14,8 +14,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.function.Consumer;
-
 @Mixin(OptionInstance.OptionInstanceSliderButton.class)
 public abstract class OptionInstanceSliderButtonMixin<T> implements AbstractSliderButtonWithValueSet<T>, IdentifiableAbstractSliderButton {
     @Shadow
@@ -28,7 +26,7 @@ public abstract class OptionInstanceSliderButtonMixin<T> implements AbstractSlid
             method = "<init>",
             at = @At("RETURN")
     )
-    private void improvemymenus$init(Options options, int x, int y, int width, int height, OptionInstance<T> instance, OptionInstance.SliderableValueSet<T> values, OptionInstance.TooltipSupplier<T> tooltipSupplier, Consumer<T> onValueChanged, boolean applyValueImmediately, CallbackInfo ci) {
+    private void improvemymenus$init(Options options, int x, int y, int width, int height, OptionInstance<T> instance, OptionInstance.SliderableValueSet<T> values, OptionInstance.TooltipSupplier<T> tooltipSupplier, OptionInstance.ValueUpdateListener<T> onValueChanged, boolean applyValueImmediately, CallbackInfo ci) {
         improvemymenus$setIdentifier(IdentifiableOptionInstance.getIdentifier(instance));
         improvemymenus$initValues(values);
     }

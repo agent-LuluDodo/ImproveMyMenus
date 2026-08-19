@@ -184,7 +184,7 @@ public class DropdownOverlayScreen<T> extends Screen {
     @Override
     public void onClose() {
         this.parent.setFocused(this.button);
-        this.minecraft.setScreen(this.parent);
+        this.minecraft.gui.setScreen(this.parent);
 
         T value = this.button.getValue();
         if (!value.equals(originalValue)) {

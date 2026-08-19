@@ -330,9 +330,9 @@ public abstract class CycleButtonMixin<T> extends AbstractButton implements Cycl
     @Override
     public void improvemymenus$openDropdown() {
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.screen != null) {
-            minecraft.setScreen(new DropdownOverlayScreen<>(
-                    minecraft.screen,
+        if (minecraft.gui.screen() != null) {
+            minecraft.gui.setScreen(new DropdownOverlayScreen<>(
+                    minecraft.gui.screen(),
                     (CycleButton<T>) (Object) this,
                     this.values,
                     this.spriteSupplier,

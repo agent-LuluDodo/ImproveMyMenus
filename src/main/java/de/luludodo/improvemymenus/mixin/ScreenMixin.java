@@ -1,7 +1,6 @@
 package de.luludodo.improvemymenus.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import de.luludodo.improvemymenus.config.Config;
 import de.luludodo.improvemymenus.mixinInterface.AbstractScrollAreaWithPageScrolling;
 import de.luludodo.improvemymenus.mixinInterface.ScreenWithParent;
@@ -9,9 +8,7 @@ import de.luludodo.improvemymenus.util.Globals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.screens.AccessibilityOnboardingScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.options.SoundOptionsScreen;
 import net.minecraft.client.gui.screens.options.VideoSettingsScreen;
 import net.minecraft.client.input.KeyEvent;
 import org.jspecify.annotations.Nullable;
@@ -68,24 +65,13 @@ public abstract class ScreenMixin implements ScreenWithParent {
             method = "onClose",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screens/Screen;)V"
+                    target = "Lnet/minecraft/client/gui/Gui;setScreen(Lnet/minecraft/client/gui/screens/Screen;)V"
             )
     )
     private Screen improvemymenus$parent(@Nullable Screen screen) {
         if (improvemymenus$parent != null)
             return improvemymenus$parent;
         return screen;
-    }
-
-    @ModifyReturnValue(
-            method = "panoramaShouldSpin",
-            at = @At("RETURN")
-    )
-    private boolean improvemymenus$panoramaShouldSpin(boolean original) {
-        if (Config.Other.FIX_ONBOARDING_PANORAMA_SPINNING && (Object) this instanceof SoundOptionsScreen self) {
-            return !(self.lastScreen instanceof AccessibilityOnboardingScreen);
-        }
-        return original;
     }
 
     @ModifyExpressionValue(

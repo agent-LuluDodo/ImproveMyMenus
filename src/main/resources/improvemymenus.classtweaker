@@ -6,7 +6,7 @@ accessible class net/minecraft/client/OptionInstance$SliderableValueSet
 accessible class net/minecraft/client/OptionInstance$CycleableValueSet
 mutable field net/minecraft/network/chat/CommonComponents OPTION_ON Lnet/minecraft/network/chat/Component;
 mutable field net/minecraft/network/chat/CommonComponents OPTION_OFF Lnet/minecraft/network/chat/Component;
-accessible field net/minecraft/client/OptionInstance onValueUpdate Ljava/util/function/Consumer;
+accessible field net/minecraft/client/OptionInstance onValueUpdate Lnet/minecraft/client/OptionInstance$ValueUpdateListener;
 accessible field net/minecraft/client/gui/screens/debug/DebugOptionsScreen ENABLED_TEXT Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/screens/debug/DebugOptionsScreen IN_OVERLAY_TEXT Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/screens/debug/DebugOptionsScreen DISABLED_TEXT Lnet/minecraft/network/chat/Component;

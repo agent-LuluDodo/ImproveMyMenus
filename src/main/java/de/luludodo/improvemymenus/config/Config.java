@@ -50,8 +50,6 @@ public class Config extends MinimalConfig {
             Other.UNBLUR_VIDEO_SETTINGS = false;
             Other.IMPROVE_DEBUG_OPTIONS = false;
             Other.IMPROVE_SOCIAL_INTERACTIONS = false;
-            Other.FIX_ONBOARDING_PANORAMA_SPINNING = true;
-            Other.INDEPENDENT_ANIMATIONS = true;
             Other.MENU_FPS = 60;
 
             INSTANCE.refresh();
@@ -90,8 +88,6 @@ public class Config extends MinimalConfig {
             Other.UNBLUR_VIDEO_SETTINGS = false;
             Other.IMPROVE_DEBUG_OPTIONS = false;
             Other.IMPROVE_SOCIAL_INTERACTIONS = false;
-            Other.FIX_ONBOARDING_PANORAMA_SPINNING = false;
-            Other.INDEPENDENT_ANIMATIONS = false;
             Other.MENU_FPS = 60;
 
             INSTANCE.refresh();
@@ -198,12 +194,6 @@ public class Config extends MinimalConfig {
         public static boolean IMPROVE_DEBUG_OPTIONS = true;
 
         public static boolean IMPROVE_SOCIAL_INTERACTIONS = true;
-
-        // Fixes MC-308112
-        public static boolean FIX_ONBOARDING_PANORAMA_SPINNING = true;
-
-        // Fixes MC-307860
-        public static boolean INDEPENDENT_ANIMATIONS = true;
 
         @IntSlider(min = 10, max = 260)
         public static int MENU_FPS = 60;

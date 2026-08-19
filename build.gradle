@@ -44,135 +44,143 @@ dependencies {
     implementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 
     /********** Fabulously Optimized **********/
-
     // Animatica Refrabicated
-    implementation "maven.modrinth:animaticarefabricated:0.6.2+26.1"
+    implementation "maven.modrinth:animaticarefabricated:0.6.3+26.2"
 
     // Better Block Entities
-    implementation "maven.modrinth:better-block-entities:1.3.4+mc26.1.2"
-
-    // Better Mount HUD
-    implementation "maven.modrinth:better-mount-hud:1.3.0"
+    implementation "maven.modrinth:better-block-entities:1.3.8-beta.1+mc26.2"
 
     // Better Grassify
-    implementation "maven.modrinth:bettergrassify:1.8.6+fabric.26.1.2"
+    implementation "maven.modrinth:bettergrassify:1.8.7+fabric.26.2"
+
+    // Better Mount HUD
+    implementation "maven.modrinth:better-mount-hud:1.3.1"
 
     // Cape Provider
-    implementation "maven.modrinth:cape-provider:5.4.0"
+    implementation "maven.modrinth:cape-provider:5.5.0"
 
     // Cloth Config
-    implementation "maven.modrinth:cloth-config:26.1.154+fabric"
+    implementation "maven.modrinth:cloth-config:26.2.155+fabric"
 
     // Config Manager
-    implementation "maven.modrinth:configmanager:1.1.2"
+    implementation "maven.modrinth:configmanager:1.1.3"
 
     // Continuity
-    implementation "maven.modrinth:continuity:3.0.1-beta.2+26.1"
+    implementation "maven.modrinth:continuity:3.0.1+26.2"
 
     // Controlify
-    implementation "maven.modrinth:controlify:3.0.1"
+    implementation "maven.modrinth:controlify:3.4.1+mc26.2"
 
     // Crash Assistant
-    implementation "maven.modrinth:crash-assistant:zDcQ7aOP"
+    implementation "maven.modrinth:crash-assistant:i9RTpEjU"
 
     // Cubes Without Borders
-    implementation "maven.modrinth:cubes-without-borders:4.0.5+26.1"
+    implementation "maven.modrinth:cubes-without-borders:4.1.0+26.2"
 
     // Debugify
-    implementation "maven.modrinth:debugify:26.1.2.2"
+    implementation "maven.modrinth:debugify:26.2.0.0"
 
     // Dynamic FPS
-    implementation "maven.modrinth:dynamic-fps:3.11.7"
+    implementation "maven.modrinth:dynamic-fps:3.11.9"
 
     // e4mc
-    implementation "maven.modrinth:e4mc:6.1.0-fabric-modern"
+    implementation "maven.modrinth:e4mc:6.2.1-fabric-modern"
 
     // Entity Model Features
-    implementation "maven.modrinth:entity-model-features:3.2.4-fabric-26.1"
-
-    // Entity Texture Features
-    implementation "maven.modrinth:entitytexturefeatures:7.1-fabric-26.1"
+    implementation "maven.modrinth:entity-model-features:3.2.6-fabric-26.2"
 
     // Entity Culling
-    implementation "maven.modrinth:entityculling:1.10.2"
+    implementation "maven.modrinth:entityculling:iiF6U3Ne"
+
+    // Entity Texture Features
+    implementation "maven.modrinth:entitytexturefeatures:7.1.1-fabric-26.2"
 
     // Fabric Language Kotlin
-    implementation "maven.modrinth:fabric-language-kotlin:1.13.11+kotlin.2.3.21"
-
-    // Fabrishot
-    implementation "maven.modrinth:fabrishot:1.17.0"
+    implementation "maven.modrinth:fabric-language-kotlin:1.13.13+kotlin.2.4.10"
 
     // FastQuit
-    implementation "maven.modrinth:fastquit:3.1.4+mc26.1.x"
+    implementation "maven.modrinth:fastquit:3.1.5+mc26.2"
 
     // FerriteCore
     implementation "maven.modrinth:ferrite-core:9.0.0-fabric"
 
     // Forge Config API Port
-    implementation "maven.modrinth:forge-config-api-port:26.1.4"
+    implementation "maven.modrinth:forge-config-api-port:26.2.1"
 
     // ImmediatelyFast
-    implementation "maven.modrinth:immediatelyfast:1.15.2+26.1.2-fabric"
+    implementation "maven.modrinth:immediatelyfast:1.16.3+26.2-fabric"
 
     // Iris
-    implementation "maven.modrinth:iris:1.10.9+26.1-fabric"
+    implementation "maven.modrinth:iris:1.11.2+26.2-fabric"
 
     // Ixeris
-    implementation "maven.modrinth:ixeris:4.4.0+26.1.2-fabric"
+    implementation "maven.modrinth:ixeris:4.6.5+26.2-fabric"
 
     // LambDynamicLights
-    implementation "maven.modrinth:lambdynamiclights:4.10.2+26.1.2"
+    implementation "maven.modrinth:lambdynamiclights:4.12.3+26.2"
 
     // Language Reload
-    implementation "maven.modrinth:language-reload:1.7.6+26.1"
+    implementation "maven.modrinth:language-reload:1.7.7+26.2"
 
     // Lithium
-    implementation "maven.modrinth:lithium:mc26.1.2-0.24.4-fabric"
+    implementation "maven.modrinth:lithium:mc26.2-0.25.3-fabric"
 
     // Main Menu Credits
-    implementation "maven.modrinth:main-menu-credits:1.3.0"
+    implementation "maven.modrinth:main-menu-credits:1.4.0+26.2"
+
+    // Mixin Trace Reborn
+    implementation "maven.modrinth:mixintrace-reborn:1.0-26.1"
+
+    // Modern Fix - mVUS
+    //implementation "maven.modrinth:modernfix-mvus:TUWH6NZu" breaks in devenv for some reason
 
     // More Chat History
     implementation "maven.modrinth:morechathistory:2.0.0"
 
     // More Culling
-    implementation "maven.modrinth:moreculling:1.7.0"
+    implementation "maven.modrinth:moreculling:1.8.1"
 
     // No Chat Reports
-    implementation "maven.modrinth:no-chat-reports:Fabric-26.1-v2.19.0"
+    implementation "maven.modrinth:no-chat-reports:Fabric-26.2-v2.20.1"
 
     // OptiGUI
-    implementation "maven.modrinth:optigui:2.3.0-beta.10+26.1"
+    implementation "maven.modrinth:optigui:2.3.0-beta.10+26.2"
 
     // Paginated Advancements
-    implementation "maven.modrinth:paginatedadvancements:2.8.0+26.1"
+    implementation "maven.modrinth:paginatedadvancements:2.8.0+26.2"
+
+    // Polytone
+    implementation "maven.modrinth:polytone:26.2-6.3.2"
 
     // Puzzle
-    implementation "maven.modrinth:puzzle:2.3.1+26.1-fabric"
+    implementation "maven.modrinth:puzzle:2.3.1+26.2-fabric"
 
     // Reese's Sodium Options
-    implementation "maven.modrinth:reeses-sodium-options:mc26.1.1-2.0.5+fabric"
+    implementation "maven.modrinth:reeses-sodium-options:mc26.2-2.2.3+fabric"
 
     // Remove Reloading Screen
-    implementation "maven.modrinth:rrls:5.2.5+mc26.1"
+    implementation "maven.modrinth:rrls:5.2.8+mc26.2"
 
     // Skyboxify
-    implementation "maven.modrinth:skyboxify:R7DoQLx1"
+    implementation "maven.modrinth:skyboxify:rChaTdfe"
 
     // Sodium
-    implementation "maven.modrinth:sodium:mc26.1.2-0.8.12-fabric"
+    implementation "maven.modrinth:sodium:mc26.2-0.9.1-fabric"
 
     // Sodium Extra
-    implementation "maven.modrinth:sodium-extra:mc26.1.1-0.8.7+fabric"
+    implementation "maven.modrinth:sodium-extra:mc26.2-0.9.3+fabric"
 
     // Sodium Shadowy Path Blocks
     implementation "maven.modrinth:sodium-shadowy-path-blocks:7.0.0-fabric"
 
+    // Text Placeholder API
+    implementation "maven.modrinth:placeholder-api:3.1.0-beta.1+26.2"
+
     // YetAnotherConfigLib
-    implementation "maven.modrinth:yacl:3.9.3+26.1-fabric"
+    implementation "maven.modrinth:yacl:3.9.5+26.2-fabric"
 
     // Zoomify
-    implementation "maven.modrinth:zoomify:2.16.0+26.1"
+    implementation "maven.modrinth:zoomify:2.16.1+26.2"
 }
 
 loom {

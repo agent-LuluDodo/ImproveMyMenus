@@ -1,5 +1,7 @@
 package de.luludodo.improvemymenus.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import de.luludodo.improvemymenus.config.Config;
 import de.luludodo.improvemymenus.util.DebugOptionsScreenUtil;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
@@ -29,5 +31,20 @@ public abstract class DebugOptionsScreenOptionListMixin {
             String o2Text = I18n.get(DebugOptionsScreenUtil.getTranslationKey(o2.getKey()));
             cir.setReturnValue(o1Text.compareToIgnoreCase(o2Text));
         }
+    }
+
+    @ModifyExpressionValue(
+            method = "updateSearch",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/lang/String;contains(Ljava/lang/CharSequence;)Z"
+            )
+    )
+    private static boolean improvemymenus$contains(boolean original, String value, @Local(name = "entry") Map.Entry<Identifier, DebugScreenEntry> entry) {
+        if (Config.Other.IMPROVE_DEBUG_OPTIONS && !original) {
+            String text = I18n.get(DebugOptionsScreenUtil.getTranslationKey(entry.getKey()));
+            return text.contains(value);
+        }
+        return original;
     }
 }

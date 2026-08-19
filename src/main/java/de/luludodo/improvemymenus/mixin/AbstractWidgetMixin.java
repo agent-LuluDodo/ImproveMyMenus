@@ -31,7 +31,7 @@ public abstract class AbstractWidgetMixin implements AbstractWidgetWithTooltipGe
     }
 
     @ModifyReceiver(
-            method = "extractRenderState",
+            method = "extractTooltipForNextRenderPass",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/gui/components/WidgetTooltipHolder;refreshTooltipForNextRenderPass(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIZZLnet/minecraft/client/gui/navigation/ScreenRectangle;)V"

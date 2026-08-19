@@ -11,8 +11,6 @@
     "AbstractScrollAreaMixin",
     "AbstractSliderButtonMixin",
     "AbstractWidgetMixin",
-    "AdvancementsScreenMixin",
-    "AdvancementTabMixin",
     "CommonComponentsMixin",
     "ContainerEventHandlerMixin",
     "CycleButtonBuilderMixin",

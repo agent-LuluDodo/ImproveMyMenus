@@ -14,7 +14,7 @@ import net.minecraft.client.gui.components.debug.DebugScreenEntryStatus;
 import net.minecraft.client.gui.components.debug.DebugScreenProfile;
 import net.minecraft.client.gui.screens.debug.DebugOptionsScreen;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -77,7 +77,7 @@ public abstract class DebugOptionsScreenOptionEntryMixin {
         newTooltip.add(Component.literal(name).withStyle(ChatFormatting.YELLOW));
 
         String tooltipTranslationKey = translationKey + ".tooltip";
-        if (I18n.exists(tooltipTranslationKey))
+        if (Language.getInstance().has(tooltipTranslationKey))
             newTooltip.add(Component.translatable(tooltipTranslationKey).withStyle(ChatFormatting.WHITE));
 
         java.util.Map<Identifier, DebugScreenEntryStatus> defaults = DebugScreenEntries.PROFILES.get(DebugScreenProfile.DEFAULT);
